@@ -5,8 +5,7 @@
 $codon is the codon
 $output is the type of output - default is single letter
 
-Return is either a single letter amino acid code (default), a 3 letter code, or the full amino acid name.
-*/
+Return is either a single letter amino acid code (default), a 3 letter code, or the full amino acid name.*/
 //---DocumentationBreak---
 function translatecodon($codon,$output="1")
 	{
