@@ -12,10 +12,11 @@ function getrawdatafromapi($id,$url)
 	{
 	if ($url == "UniProtFeatures")
 		//Get features from UniProt
-		$url = "https://www.ebi.ac.uk/proteins/api/features/<id>";
-	elseif ($url == "UniProtAccession")
+		//id is the UniProt Accession
+		$url = "https://www.ebi.ac.uk/proteins/api/features/<id>&format=json";
+	elseif ($url == "UniProtDetails")
 		//Get UniProtKB accession number
-		$url = "https://www.ebi.ac.uk/proteins/api/proteins/<id>?offset=0&size=100";
+		$url = "https://www.ebi.ac.uk/proteins/api/proteins?offset=0&size=1&gene=<id>&organism=Human&format=json";
 	elseif ($url == "ExACVariants")
 		//Get variant list from ExAC
 		$url = "http://exac.hms.harvard.edu/rest/awesome?query=<id>&service=variants_in_gene";
@@ -29,8 +30,10 @@ function getrawdatafromapi($id,$url)
 		//Get Ensemble gene ID
 		$url = "https://rest.ensembl.org/xrefs/symbol/homo_sapiens/<id>?content-type=application/json";
 	elseif ($url == "EnsemblSequenceFromCoords")
-		$url = "https://rest.ensembl.org/sequence/region/human/<id>?content-type=text/plain"
+		//Get an Ensembl sequence from the coordinates
+		$url = "https://rest.ensembl.org/sequence/region/human/<id>?content-type=text/plain";
 	elseif ($url == "SequenceFromCDS")
+		//Get an Ensembl sequence from a CDS indentifier
 		$url = "https://rest.ensembl.org/sequence/id/<id>?type=cds&content-type=text/plain";
 	
 	//$brcaid = "17:43115738..43115779:-1";	
