@@ -58,18 +58,32 @@ $exons is the exons array
 
 Output is an array of the exon boundaries*/
 //---DocumentationBreak---
-function exonboundaries($exons)
+function exonsandcds($exons)
 	{
+	//Boundaries and CDS to output
 	$boundaries = array();
+	$cds = array();
 	
-	//CDSEnd is the exon boundary
+	//ENST and exons
+	$enst = array_keys($exons);
+	$enst = array_shift($enst);
+	$exons = array_shift($exons);
+	
+	//Get all Exon boundaries in the CDS
 	foreach ($exons as $exon)
 		{
-		if (isset($exon['cdsend']) == true)
-			array_push($boundaries,$exon['cdsend']);
+		if ((isset($exon['startcds']) == true) AND (isset($exon['stopcds']) == true))
+			array_push($boundaries,$exon['stopcds']);
 		}
 	
-	Return $boundaries;
+	//Get the end of the CDS
+	sort($boundaries);
+	$endcds = end($boundaries);
+	
+	//Format output as array and return
+	$cds = array("ENST"=>$enst,"End"=>$endcds);
+	$output = array("CDS"=>$cds,"Boundaries"=>$boundaries);
+	Return $output;
 	}
 //---FunctionBreak---
 ?>
