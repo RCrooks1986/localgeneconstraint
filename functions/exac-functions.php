@@ -49,7 +49,7 @@ function getexacexons($id)
 		array_push($coordinates[$transcriptid],$coordinatesline);
 		}
 	
-	print_r($coordinates);
+	Return $coordinates;
 	}
 //---FunctionBreak---
 /*Takes an exon array and returns the boundaries
