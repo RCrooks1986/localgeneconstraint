@@ -1,5 +1,35 @@
 <?php
 //---FunctionBreak---
+/*Determine if a position is close to a splice site
+
+$position is the position to check
+$exons is an array of positions of splice sites
+
+Returns true or false whether the position is near a splice site or not*/
+//---DocumentationBreak---
+function checksplice($position,$exons)
+	{
+	$splice = false;
+	
+	//Specify the size of the exon region, account for the region being between 
+	$region = 1;
+	$region = $region-0.5;
+	
+	foreach ($exons as $exon)
+		{
+		//Define boundaries for this splice site
+		$exon = $exon+0.5;
+		$high = $exon+$region;
+		$low = $exon-$region;
+		
+		//Set to true if within splice site boundary
+		if (($position >= $low) AND ($position <= $high))	
+			$splice = true;
+		}
+	
+	Return $splice;
+	}
+//---FunctionBreak---
 /*Splits a DNA sequence into arry of trinucleotides centred around each nucleotide
 
 $dna is the DNA sequence to get the chunks for
