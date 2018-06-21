@@ -33,11 +33,28 @@ function getsequenceids($id)
 //---FunctionBreak---
 /*Gets a full length sequence from Ensembl
 
+$id is either the ENST number, or an array containing it identified by ['ENST']
+
+Output is the sequence as plain text*/
+//---DocumentationBreak---
+function getensemblsequencefromenst($id)
+	{
+	//Get ENSG ID from array if needed
+	if (is_array($id) == true)
+		$id = $id['ENST'];
+	
+	$sequence = getrawdatafromapi($id,"EnsemblSequenceFromENST");
+	
+	Return $sequence;
+	}
+//---FunctionBreak---
+/*Gets a full length sequence from Ensembl from the CDS identifier and the CDS coordinates
+
 $id is either the ENSG number, or an array containing it identified by ['ENSG']
 
 Output is the sequence as plain text*/
 //---DocumentationBreak---
-function getensemblsequence($id)
+function getensemblsequencefromcds($id,$range)
 	{
 	//Get ENSG ID from array if needed
 	if (is_array($id) == true)
