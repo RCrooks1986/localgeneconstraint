@@ -23,9 +23,9 @@ function getrawdatafromapi($id,$url)
 	elseif ($url == "ExACGetTranscript")
 		//Get transcript features from ExAC
 		$url = "http://exac.hms.harvard.edu/rest/gene/transcript/<id>";
-	elseif ($url == "EnsemblSequence")
+	elseif ($url == "EnsemblSequenceFromENST")
 		//Get sequence from Ensembl
-		$url = "https://rest.ensembl.org/sequence/id/<id>?content-type=text/plain";
+		$url = "https://rest.ensembl.org/sequence/id/<id>?type=cds&content-type=text/plain";
 	elseif ($url == "EnsemblID")
 		//Get Ensemble gene ID
 		$url = "https://rest.ensembl.org/xrefs/symbol/homo_sapiens/<id>?content-type=application/json";
@@ -35,7 +35,7 @@ function getrawdatafromapi($id,$url)
 	elseif ($url == "SequenceFromCDS")
 		//Get an Ensembl sequence from a CDS indentifier
 		$url = "https://rest.ensembl.org/sequence/id/<id>?type=cds&content-type=text/plain";
-	
+		
 	//$brcaid = "17:43115738..43115779:-1";	
 	//$brcaid = "ENST00000471181/1..122";
 		
