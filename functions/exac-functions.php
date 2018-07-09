@@ -86,4 +86,34 @@ function exonsandcds($exons)
 	Return $output;
 	}
 //---FunctionBreak---
+/*Extracts ExAC constraint scores from the API at mygene.info
+
+$ids is the array of sequence IDs from which the ENTS ID must be present
+
+Output is an array containing the constraint score details*/
+//---DocumentationBreak---
+function exacconstraint($ids)
+	{
+	//Retrieve data from API and convert JSON format output to PHP array
+	$constaintscores = getrawdatafromapi($ids['ENST'],"ConstraintMetrics");
+	$constaintscores = json_decode($constaintscores,true);
+	
+	Return $constaintscores;
+	}
+//---FunctionBreak---
+/*Extract ExAC variant list and returns them as an array 
+
+$ids is the array of sequence IDs from which the ENSG ID must be present
+
+Output is an array containing the list of variants*/
+//---DocumentationBreak---
+function exacconstraint($ids)
+	{
+	//Retrieve variants from API and convert JSON format output to PHP array
+	$variants = getrawdatafromapi($ids['ENSG'],"ExACVariants");
+	$variants = json_decode($variants,true);
+	
+	Return $variants;
+	}
+//---FunctionBreak---
 ?>
