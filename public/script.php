@@ -37,6 +37,13 @@ print_r($exonboundaries);
 
 echo "<br>";
 
+//Get constaint scores for this gene from the API
+$constaintscores = exacconstraint($ids);
+
+print_r($constaintscores);
+
+echo "<br>";
+
 //Get the gene sequence from the CDS identified by the ENST ID
 $sequence = getensemblsequencefromenst($ids);
 
@@ -53,8 +60,12 @@ $sequenceposition = 1;
 //Variable to denote where the stop codon is, do not change stop codons
 $endcodon = count($sequence)-2;
 
+//Variables to store the total u scores for missense and synonymous variation in gene
+$totalmissense = 0;
+$totalsynonymous = 0;
+
 //Calculate the liklihood of missense and nonsense variants are each nucleotide
-$changescores = array();
+$sequencenucleotides = array();
 foreach($sequence as $currentkey=>$currentnucleotide)
 	{
 	//Check that the sequence position is not near a splice site using the checksplice function and the $exonboundaries['Boundaries'] array
@@ -90,7 +101,7 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 		//Identify the current amino acid for identifying whether the variant is a missense or a synonymous variant
 		$currentaminoacid = translatecodon($currentcodon);
 		
-		echo $currentcodon . " = " . $currentaminoacid . " ";
+		//echo $currentcodon . " = " . $currentaminoacid . " ";
 		
 		foreach ($uvalues as $variant=>$uvalue)
 			{
@@ -98,7 +109,7 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 			$variantcodon = str_replace("X",$variant,$codontemplate);
 			$variantaminoacid = translatecodon($variantcodon);
 			
-			echo $variantcodon . " = " . $variantaminoacid . " ";
+			//echo $variantcodon . " = " . $variantaminoacid . " ";
 			
 			//Add U score to missense or synonymous nucleotide position score
 			if (($currentaminoacid != $variantaminoacid) AND ($variantaminoacid != "*"))
@@ -107,16 +118,15 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 				$synonymous = $synonymous+$uvalue['U'];
 			}
 		
-		echo $currentnucleotide . " Miss: " . $missense . " Syn: " . $synonymous . "<br>";
-		}
-	
-	
-	/*
-	elseif ($codonposition == 3)
-		{
+		//echo $currentnucleotide . " Miss: " . $missense . " Syn: " . $synonymous . "<br>";
 		
+		//Record U scores in by position array and in the total scores array
+		$positionuscores = array("Miss"=>$missense,"Syn"=>$synonymous);
+		$sequencenucleotides[$sequenceposition] = $positionuscores;
+		$totalmissense = $totalmissense+$missense;
+		$totalsynonymous = $totalsynonymous+$synonymous;
 		}
-	*/
+	
 	//Increment the codon position counter and the sequence position counter
 	$codonposition = frameinc($codonposition,"123");	
 	$sequenceposition++;
@@ -124,5 +134,5 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 
 //$uniprot = getuniprotdetails($genesymbol);
 
-//print_r($uniprot);
+print_r($sequencenucleotides);
 ?>
