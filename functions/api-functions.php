@@ -35,6 +35,9 @@ function getrawdatafromapi($id,$url)
 	elseif ($url == "SequenceFromCDS")
 		//Get an Ensembl sequence from a CDS indentifier
 		$url = "https://rest.ensembl.org/sequence/id/<id>?type=cds&content-type=text/plain";
+	elseif ($url == "ConstraintMetrics")
+		//Get ExAC constaint metrics using an ENST transcript identifier
+		$url = "http://mygene.info/v3/query?q=exac.transcript:<id>&fields=exac";
 		
 	//$brcaid = "17:43115738..43115779:-1";	
 	//$brcaid = "ENST00000471181/1..122";
