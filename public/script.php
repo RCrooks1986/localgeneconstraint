@@ -42,6 +42,9 @@ $constaintscores = exacconstraint($ids);
 
 print_r($constaintscores);
 
+$totalexpectedmissense = $constaintscores['hits'][0]['exac']['all']['exp_mis'];
+$totalexpectedsynonymous = $constaintscores['hits'][0]['exac']['all']['exp_syn'];
+
 echo "<br>";
 
 //Get the gene sequence from the CDS identified by the ENST ID
@@ -135,4 +138,7 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 //$uniprot = getuniprotdetails($genesymbol);
 
 print_r($sequencenucleotides);
+
+echo $totalexpectedmissense . "<br>";
+echo $totalexpectedsynonymous . "<br>";
 ?>
