@@ -139,6 +139,62 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 
 print_r($sequencenucleotides);
 
+echo "<br>";
+
 echo $totalexpectedmissense . "<br>";
 echo $totalexpectedsynonymous . "<br>";
+echo $totalmissense . "<br>";
+echo $totalsynonymous . "<br>";
+
+$variantlist = exacvariants($ids);
+
+print_r($variantlist);
+
+echo "<br>";
+
+foreach ($variantlist as $variant)
+	{
+	//Variants are only included if they are missense variants or synonymous variants
+	if (($variant['major_consequence'] == 'missense_variant') OR ($variant['major_consequence'] == 'synonymous_variant'))
+		{
+		//Extract position from the HGVSc array element in order to identify where a unique variant occurs
+		$hgvsc = $variant['HGVSc'];
+		
+		//Define where to start and stop retrieving integers to identify a position from a HGVSc identifier
+		if ((strpos($variant['HGVSc'],"del") !== false) AND (strpos($variant['HGVSc'],"ins") !== false) AND (strpos($variant['HGVSc'],"_") !== false))
+			{
+			//Start getting numbers between "_" and "d" if this is an del ins variant
+			$opens = array("_");
+			$closes = array("d");
+			}
+		else
+			{
+			//Start getting numbers between "." and a nucleotide if this is an del ins variant
+			$opens = array(".");
+			$closes = array("A","C","G","T");
+			}
+		
+		//Parameters to begin extracting integer position
+		$position = str_split($variant['HGVSc']);
+		$extracting = false;
+		//Loop to find each character and extract only the integer that refers to the position of the variant
+		foreach ($position as $positionkey=>$character)
+			{
+			if ($extracting == false)
+				unset($position[$positionkey]);
+			
+			if (in_array($character,$opens) == true)
+				$extracting = true;
+			elseif (in_array($character,$closes) == true)
+				{
+				$extracting = false;
+				unset($position[$positionkey]);
+				}
+			}
+		
+		$position = implode("",$position);
+		
+		echo $variant['HGVSc'] . " = " . $position . "<br>";
+		}
+	}
 ?>
