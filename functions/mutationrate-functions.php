@@ -285,11 +285,43 @@ function uvalue($trinucleotide)
 	Return $uscores;
 	}
 //---FunctionBreak---
-/*Calculates the total U score for each type of variant at a given codon*/
+/*Calculates the total U Score and number of variants in a subset of a gene*/
 //---DocumentationBreak---
-function codonuscores($codon)
+function subsetuscoreandvariant($sequence,$min="",$max="")
 	{
-	Return 1;	
+	//Define $min and $max constraints as - infinity and infinity to account for any size of gene
+	if (is_numeric($min) == false)
+		$min = 0-INF;
+	if (is_numeric($max) == false)
+		$max = INF;
+	
+	//Create array to hold U Scores and variant counts
+	$output = array();
+	$output['UScoreMissense'] = 0;
+	$output['UScoreSynonymous'] = 0;
+	$output['VariantsMissense'] = 0;
+	$output['VariantsSynonymous'] = 0;
+		
+	foreach ($sequence as $position=>$variantdata)
+		{
+		//Only include if within the range specified by max and min
+		if (($position >= $min) AND ($position <= $max))
+			{			
+			//Add missense and synonymous UScores to UScores in outpu array
+			if (isset($variantdata['UScoreMissense']) == true)
+				$output['UScoreMissense'] = $output['UScoreMissense']+$variantdata['UScoreMissense'];
+			if (isset($variantdata['UScoreSynonymous']) == true)
+				$output['UScoreSynonymous'] = $output['UScoreSynonymous']+$variantdata['UScoreSynonymous'];
+			
+			//Add missense and synonymous variants to variant counts in output array
+			if (isset($variantdata['VariantsMissense']) == true)
+				$output['VariantsMissense'] = $output['VariantsMissense']+$variantdata['VariantsMissense'];
+			if (isset($variantdata['VariantsSynonymous']) == true)
+				$output['VariantsSynonymous'] = $output['VariantsSynonymous']+$variantdata['VariantsSynonymous'];
+			}
+		}
+	
+	Return $output;
 	}
 //---FunctionBreak---
 ?>
