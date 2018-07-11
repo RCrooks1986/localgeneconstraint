@@ -124,7 +124,7 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 		//echo $currentnucleotide . " Miss: " . $missense . " Syn: " . $synonymous . "<br>";
 		
 		//Record U scores in by position array and in the total scores array
-		$positionuscores = array("Miss"=>$missense,"Syn"=>$synonymous);
+		$positionuscores = array("UScoreMissense"=>$missense,"UScoreSynonymous"=>$synonymous);
 		$sequencenucleotides[$sequenceposition] = $positionuscores;
 		$totalmissense = $totalmissense+$missense;
 		$totalsynonymous = $totalsynonymous+$synonymous;
@@ -155,7 +155,7 @@ echo "<br>";
 foreach ($variantlist as $variant)
 	{
 	//Variants are only included if they are missense variants or synonymous variants
-	if (($variant['major_consequence'] == 'missense_variant') OR ($variant['major_consequence'] == 'synonymous_variant'))
+	if ((($variant['major_consequence'] == 'missense_variant') OR ($variant['major_consequence'] == 'synonymous_variant')) AND ($variant['allele_freq'] < 0.001))
 		{
 		//Extract position from the HGVSc array element in order to identify where a unique variant occurs
 		$hgvsc = $variant['HGVSc'];
@@ -192,9 +192,32 @@ foreach ($variantlist as $variant)
 				}
 			}
 		
+		//Turn the position into a numerical value
 		$position = implode("",$position);
 		
 		echo $variant['HGVSc'] . " = " . $position . "<br>";
+		
+		//Define variant type to record in sequence array
+		if ($variant['major_consequence'] == 'missense_variant')
+			$varianttype = "VariantsMissense";
+		elseif ($variant['major_consequence'] == 'synonymous_variant')
+			$varianttype = "VariantsSynonymous";
+		
+		//Assign number of variants to the position based on the variant location retrieved from ExAC
+		if (isset($sequencenucleotides[$position][$varianttype]) == true)
+			$sequencenucleotides[$position][$varianttype] = $sequencenucleotides[$position][$varianttype]+1;
+		else
+			$sequencenucleotides[$position][$varianttype] = 1;
 		}
 	}
+
+print_r($sequencenucleotides);
+
+echo "<br>";
+
+$subset = subsetuscoreandvariant($sequencenucleotides);
+
+print_r($subset);
+
+echo "<br>";
 ?>
