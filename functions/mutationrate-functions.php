@@ -285,7 +285,10 @@ function uvalue($trinucleotide)
 	Return $uscores;
 	}
 //---FunctionBreak---
-/*Calculates the total U Score and number of variants in a subset of a gene*/
+/*Calculates the total U Score and number of variants in a subset of a gene
+
+$sequence is an array containing U scores and variant counts at each nucleotide position in a gene and for both missense and synonymous variants
+$min and $max are the minimum and maximum of the range to lookup*/
 //---DocumentationBreak---
 function subsetuscoreandvariant($sequence,$min="",$max="")
 	{
@@ -322,6 +325,26 @@ function subsetuscoreandvariant($sequence,$min="",$max="")
 		}
 	
 	Return $output;
+	}
+//---FunctionBreak---
+/*Finds the correction factor to convert the Z score (O-E)/sqrt(E) into one comparable with that found in ExAC
+
+$observed is the observed number of variants
+$expected is the expected number of variants
+$zscore is the Z score from ExAC that a correction factor is used to convert to*/
+//---DocumentationBreak---
+function zscoreadjustment($observed,$expected,$constraint)
+	{
+	//Calculate numerator and denominator of Z score
+	$eminuso = $expected-$observed;
+	$roote = sqrt($expected);
+	
+	//Calculate Z score
+	$zscore = $eminuso/$roote;
+	
+	//Calculate factor to adjust Z score by and return
+	$constraintadjust = $constraint/$zscore;
+	Return $constraintadjust;
 	}
 //---FunctionBreak---
 ?>
