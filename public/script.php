@@ -195,7 +195,7 @@ foreach ($variantlist as $variant)
 		//Turn the position into a numerical value
 		$position = implode("",$position);
 		
-		echo $variant['HGVSc'] . " = " . $position . "<br>";
+		echo $variant['HGVSc'] . " = " . $variant['major_consequence'] . "<br>";
 		
 		//Define variant type to record in sequence array
 		if ($variant['major_consequence'] == 'missense_variant')
@@ -203,11 +203,14 @@ foreach ($variantlist as $variant)
 		elseif ($variant['major_consequence'] == 'synonymous_variant')
 			$varianttype = "VariantsSynonymous";
 		
-		//Assign number of variants to the position based on the variant location retrieved from ExAC
-		if (isset($sequencenucleotides[$position][$varianttype]) == true)
-			$sequencenucleotides[$position][$varianttype] = $sequencenucleotides[$position][$varianttype]+1;
-		else
-			$sequencenucleotides[$position][$varianttype] = 1;
+		if (isset($sequencenucleotides[$position]) == true)
+			{
+			//Assign number of variants to the position based on the variant location retrieved from ExAC
+			if (isset($sequencenucleotides[$position][$varianttype]) == true)
+				$sequencenucleotides[$position][$varianttype] = $sequencenucleotides[$position][$varianttype]+1;
+			else
+				$sequencenucleotides[$position][$varianttype] = 1;
+			}
 		}
 	}
 
@@ -215,9 +218,10 @@ print_r($sequencenucleotides);
 
 echo "<br>";
 
-$subset = subsetuscoreandvariant($sequencenucleotides);
+//Get the total count of all variants and U scores 
+$totalvariants = subsetuscoreandvariant($sequencenucleotides);
 
-print_r($subset);
+print_r($totalvariants);
 
 echo "<br>";
 ?>
