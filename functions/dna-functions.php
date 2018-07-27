@@ -7,11 +7,11 @@ $output is the type of output - default is single letter
 
 Return is either a single letter amino acid code (default), a 3 letter code, or the full amino acid name.*/
 //---DocumentationBreak---
-function translatecodon($codon,$output="1")
+function translatecodon($codon,$outputtype="1")
 	{
 	//Default output to 1
-	if (($output != "1") AND ($output != "3") AND ($output != "Name"))
-		$output = 1;
+	if (($outputtype != "1") AND ($outputtype != "3") AND ($outputtype != "Name"))
+		$outputtype = 1;
 	
 	//Genetic code
 	$geneticcode = array();
@@ -81,9 +81,9 @@ function translatecodon($codon,$output="1")
 	$geneticcode['TTT'] = array("1"=>"F","3"=>"Phe","Name"=>"Phenylalanine");
 	
 	$aminoacid = $geneticcode[$codon];
-	$aminoacid = $aminoacid[$output];
+	$aminoacid = $aminoacid[$outputtype];
 	
-	Return $output;
+	Return $aminoacid;
 	}
 //---FunctionBreak---
 ?>

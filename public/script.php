@@ -8,7 +8,7 @@ include '../functions/mutationrate-functions.php';
 include '../functions/bruteforce-functions.php';
 include '../../../functions/cycleloop-functions.php';
 
-$genesymbol = "BRCA1";
+$genesymbol = "FOS";
 
 echo "<p>Gene Symbol: " . $genesymbol . "</p>";
 
@@ -49,6 +49,8 @@ $totalobservedmissense = $constaintscores['hits'][0]['exac']['all']['n_mis'];
 $totalobservedsynonymous = $constaintscores['hits'][0]['exac']['all']['n_syn'];
 $zscoremissense = ($totalexpectedmissense-$totalobservedmissense)/sqrt($totalexpectedmissense);
 $zscoresynonymous = ($totalexpectedsynonymous-$totalobservedsynonymous)/sqrt($totalexpectedsynonymous);
+$adjustmissense = $constaintscores['hits'][0]['exac']['all']['mis_z']/$zscoremissense;
+$adjustsynonymous = $constaintscores['hits'][0]['exac']['all']['syn_z']/$zscoresynonymous;
 echo "<br>";
 
 //Get the gene sequence from the CDS identified by the ENST ID
@@ -145,10 +147,15 @@ print_r($sequencenucleotides);
 
 echo "<br>";
 
+echo "<p>ExAC Parameters<br>";
 echo $totalexpectedmissense . "<br>";
 echo $totalexpectedsynonymous . "<br>";
 echo $totalmissense . "<br>";
 echo $totalsynonymous . "<br>";
+echo $zscoremissense . "<br>";
+echo $zscoresynonymous . "<br>";
+echo $adjustmissense . "<br>";
+echo $adjustsynonymous . "</p>";
 
 $variantlist = exacvariants($ids);
 
@@ -222,10 +229,65 @@ print_r($sequencenucleotides);
 
 echo "<br>";
 
+
+
 //Get the total count of all variants and U scores 
 $totalvariants = subsetuscoreandvariant($sequencenucleotides);
 
 print_r($totalvariants);
 
 echo "<br>";
+
+//Rescale expected number of variants for whole sequence based on observed values in the variant location data from ExAC, the Z scores, and the brute force algorithm.
+//Parameters for deviation range to brute force, current is 25% either way, but may be changed in future
+$deviationrange = 0.25;
+$topdeviation = 1+$deviationrange;
+$bottomdeviation = 1-$deviationrange;
+//Range parameters to use in the brute force algorithm
+$minsyn = $totalexpectedsynonymous*$bottomdeviation;
+$maxsyn = $totalexpectedsynonymous*$topdeviation;
+$minmis = $totalexpectedmissense*$bottomdeviation;
+$maxmis = $totalexpectedmissense*$topdeviation;
+$estimatedexpectedmissense = brutecalculatee($zscoremissense,$totalvariants['VariantsMissense'],$minmis,$maxmis);
+$estimatedexpectedsynonymous = brutecalculatee($zscoresynonymous,$totalvariants['VariantsSynonymous'],$minsyn,$maxsyn);
+
+//Retrieve U Scores and Variant frequenies for a given range
+//$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides);
+$protstart = 165;
+$protfinish = 193;
+$nucstart = ($protstart*3)-2;
+$nucfinish = ($protfinish*3);
+$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides,$nucstart,$nucfinish);
+
+echo $estimatedexpectedmissense . "<br>";
+echo $estimatedexpectedsynonymous . "<br>";
+
+//Find the percentage of the U score contributed by the given region
+$subsetmissenseuscorespercent = ($subsetvariantsandscores['UScoreMissense']/$totalvariants['UScoreMissense'])*100;
+$subsetsynonymoususcorespercent = ($subsetvariantsandscores['UScoreSynonymous']/$totalvariants['UScoreSynonymous'])*100;
+
+echo $subsetmissenseuscorespercent . "<br>";
+echo $subsetsynonymoususcorespercent . "<br>";
+
+//Calculate local expected frequencies from the percentage of U score and the overall expected frequency
+$localmissenseexpected = ($estimatedexpectedmissense/100)*$subsetmissenseuscorespercent;
+$localsynonymousexpected = ($estimatedexpectedsynonymous/100)*$subsetsynonymoususcorespercent;
+
+echo $localmissenseexpected . "<br>";
+echo $localsynonymousexpected . "<br>";
+echo $subsetvariantsandscores['VariantsMissense'] . "<br>";
+echo $subsetvariantsandscores['VariantsSynonymous'] . "<br>";
+
+//Calculate local Z scores
+$localzscoremissense = ($localmissenseexpected-$subsetvariantsandscores['VariantsMissense'])/sqrt($localmissenseexpected);
+$localzscoresynonymous = ($localsynonymousexpected-$subsetvariantsandscores['VariantsSynonymous'])/sqrt($localsynonymousexpected);
+
+echo $localzscoremissense . "<br>";
+echo $localzscoresynonymous . "<br>";
+
+$localconstraintmissense = $localzscoremissense*$adjustmissense;
+$localconstraintsynonymous = $localzscoresynonymous*$adjustsynonymous;
+
+echo $localconstraintmissense . "<br>";
+echo $localconstraintsynonymous . "<br>";
 ?>

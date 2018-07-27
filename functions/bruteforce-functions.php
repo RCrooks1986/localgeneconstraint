@@ -1,8 +1,9 @@
 <?php
 //---FunctionBreak---
-/*Brute force calculates the expected value based on Z = E/sqrt(E)
+/*Brute force calculates the expected value based on Z = E-O/sqrt(E)
 
 $z is the Z score (not constraint) to optimise E to
+$o is the observed value to optimise E to
 $min is the minimum starting value of E
 $max is the maximum starting value of E
 
@@ -26,9 +27,10 @@ function brutecalculatee($z,$o,$min,$max)
 		$random = $rangesize*$random;
 		$value = $min+$random;
 		
+		//Calculate the Z value using the generated E value
 		$test = ($value-$o)/sqrt($value);
 		
-		//Set new maximum, minimum, or stop number depending on cycles how close to the Z value the tested E value generates
+		//Set new maximum or minimum value for the random number generator range
 		if ($test < $z)
 			$min = $value;
 		elseif ($test > $z)

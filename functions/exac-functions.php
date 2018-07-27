@@ -107,7 +107,7 @@ $ids is the array of sequence IDs from which the ENSG ID must be present
 
 Output is an array containing the list of variants*/
 //---DocumentationBreak---
-function exacconstraint($ids)
+function exacvariants($ids)
 	{
 	//Retrieve variants from API and convert JSON format output to PHP array
 	$variants = getrawdatafromapi($ids['ENSG'],"ExACVariants");

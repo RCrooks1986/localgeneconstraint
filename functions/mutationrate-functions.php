@@ -327,24 +327,4 @@ function subsetuscoreandvariant($sequence,$min="",$max="")
 	Return $output;
 	}
 //---FunctionBreak---
-/*Finds the correction factor to convert the Z score (O-E)/sqrt(E) into one comparable with that found in ExAC
-
-$observed is the observed number of variants
-$expected is the expected number of variants
-$zscore is the Z score from ExAC that a correction factor is used to convert to*/
-//---DocumentationBreak---
-function zscoreadjustment($observed,$expected,$constraint)
-	{
-	//Calculate numerator and denominator of Z score
-	$eminuso = $expected-$observed;
-	$roote = sqrt($expected);
-	
-	//Calculate Z score
-	$zscore = $eminuso/$roote;
-	
-	//Calculate factor to adjust Z score by and return
-	$constraintadjust = $constraint/$zscore;
-	Return $constraintadjust;
-	}
-//---FunctionBreak---
 ?>
