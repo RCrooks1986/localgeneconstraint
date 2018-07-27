@@ -5,6 +5,7 @@ include '../functions/ensembl-functions.php';
 include '../functions/uniprot-functions.php';
 include '../functions/exac-functions.php';
 include '../functions/mutationrate-functions.php';
+include '../functions/bruteforce-functions.php';
 include '../../../functions/cycleloop-functions.php';
 
 $genesymbol = "BRCA1";
@@ -44,7 +45,10 @@ print_r($constaintscores);
 
 $totalexpectedmissense = $constaintscores['hits'][0]['exac']['all']['exp_mis'];
 $totalexpectedsynonymous = $constaintscores['hits'][0]['exac']['all']['exp_syn'];
-
+$totalobservedmissense = $constaintscores['hits'][0]['exac']['all']['n_mis'];
+$totalobservedsynonymous = $constaintscores['hits'][0]['exac']['all']['n_syn'];
+$zscoremissense = ($totalexpectedmissense-$totalobservedmissense)/sqrt($totalexpectedmissense);
+$zscoresynonymous = ($totalexpectedsynonymous-$totalobservedsynonymous)/sqrt($totalexpectedsynonymous);
 echo "<br>";
 
 //Get the gene sequence from the CDS identified by the ENST ID
