@@ -1,4 +1,5 @@
 <?php
+//Include files containing shared functions which can also be used by other scripts
 include '../functions/api-functions.php';
 include '../functions/dna-functions.php';
 include '../functions/ensembl-functions.php';
@@ -8,40 +9,33 @@ include '../functions/mutationrate-functions.php';
 include '../functions/bruteforce-functions.php';
 include '../../../functions/cycleloop-functions.php';
 
-$genesymbol = "FOS";
+//Get gene symbol as user input
+$genesymbol = "BRCA1";
 
-echo "<p>Gene Symbol: " . $genesymbol . "</p>";
+//Get constraint range as user input
+//There will be a variety of different constraint ranges available in this section
+$nucrangestart = 200;
+$nucrangeend = 500;
 
-//Get the ENSG and LRG IDs from the gene symbol input
+echo "<p>Input Parameters:<br>";
+echo "Gene Symbol: " . $genesymbol . "<br>";
+echo "Start: " . $nucrangestart . "<br>";
+echo "End: " . $nucrangeend . "</p>";
+
+//Get the ENSG and LRG IDs from the gene symbol input which can be used for querying other functions
 $ids = getsequenceids($genesymbol);
-
-print_r($ids);
-
-echo "<br>";
 
 //Get the exons from ExAc by querying with the ENSG sequence using the getexacexons function
 //ExAc is used as the source of the exons as this makes it compatible with the missense variants data
 $exons = getexacexons($ids['ENSG']);
 
-echo "Exons:<br>";
-
-print_r($exons);
-
-echo "<br>";
-
+//Get the exon boundaries and ENST ID from the exons array
 $exonboundaries = exonsandcds($exons);
 $ids['ENST'] = $exonboundaries['CDS']['ENST'];
 
-echo "Exon Boundaries:<br>";
-
-print_r($exonboundaries);
-
-echo "<br>";
-
 //Get constaint scores for this gene from the API
+//Reform this function so that it gets a constraint table, z scores and adjustment factors and exports them as an array
 $constaintscores = exacconstraint($ids);
-
-print_r($constaintscores);
 
 $totalexpectedmissense = $constaintscores['hits'][0]['exac']['all']['exp_mis'];
 $totalexpectedsynonymous = $constaintscores['hits'][0]['exac']['all']['exp_syn'];
@@ -51,17 +45,14 @@ $zscoremissense = ($totalexpectedmissense-$totalobservedmissense)/sqrt($totalexp
 $zscoresynonymous = ($totalexpectedsynonymous-$totalobservedsynonymous)/sqrt($totalexpectedsynonymous);
 $adjustmissense = $constaintscores['hits'][0]['exac']['all']['mis_z']/$zscoremissense;
 $adjustsynonymous = $constaintscores['hits'][0]['exac']['all']['syn_z']/$zscoresynonymous;
-echo "<br>";
 
 //Get the gene sequence from the CDS identified by the ENST ID
 $sequence = getensemblsequencefromenst($ids);
 
-echo $sequence . "<br>";
-
 //Turn sequence into array in order to process it as a loop
 $sequence = str_split($sequence);
 
-//Define which position in the codon, starts at 1
+//Define which position in the codon, starts at 1, will loop back to 1 once past 3
 $codonposition = 1;
 //Define sequence position, starts at 1
 $sequenceposition = 1;
@@ -110,8 +101,6 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 		//Identify the current amino acid for identifying whether the variant is a missense or a synonymous variant
 		$currentaminoacid = translatecodon($currentcodon);
 		
-		//echo $currentcodon . " = " . $currentaminoacid . " ";
-		
 		foreach ($uvalues as $variant=>$uvalue)
 			{
 			//Produce variant and identify the new amino acid produced
@@ -127,8 +116,6 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 				$synonymous = $synonymous+$uvalue['U'];
 			}
 		
-		//echo $currentnucleotide . " Miss: " . $missense . " Syn: " . $synonymous . "<br>";
-		
 		//Record U scores in by position array and in the total scores array
 		$positionuscores = array("UScoreMissense"=>$missense,"UScoreSynonymous"=>$synonymous);
 		$sequencenucleotides[$sequenceposition] = $positionuscores;
@@ -137,32 +124,28 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 		}
 	
 	//Increment the codon position counter and the sequence position counter
-	$codonposition = frameinc($codonposition,"123");	
+	$codonposition = frameinc($codonposition,"123");
 	$sequenceposition++;
 	}
 
+//This should be earlier and called if looking at protein domain
 //$uniprot = getuniprotdetails($genesymbol);
 
-print_r($sequencenucleotides);
+echo "<p>ExAC Parameters (Summary Table)<br>";
+echo "Expected Missense: " . $totalexpectedmissense . "<br>";
+echo "Expected Synonymous: " . $totalexpectedsynonymous . "<br>";
+echo "Total Missense: " . $totalmissense . "<br>";
+echo "Total Synonymous: " . $totalsynonymous . "<br>";
+echo "Z Score Missense: " . $zscoremissense . "<br>";
+echo "Z Score Synonymous : " . $zscoresynonymous . "<br>";
+echo "Adjustment Factor Missense: " . $adjustmissense . "<br>";
+echo "Adjustment Factor Synonymous: " . $adjustsynonymous . "</p>";
 
-echo "<br>";
-
-echo "<p>ExAC Parameters<br>";
-echo $totalexpectedmissense . "<br>";
-echo $totalexpectedsynonymous . "<br>";
-echo $totalmissense . "<br>";
-echo $totalsynonymous . "<br>";
-echo $zscoremissense . "<br>";
-echo $zscoresynonymous . "<br>";
-echo $adjustmissense . "<br>";
-echo $adjustsynonymous . "</p>";
-
+//Get list of variants and the positions they're in from ExAC
 $variantlist = exacvariants($ids);
 
-print_r($variantlist);
-
-echo "<br>";
-
+//Filter variants to only include variants that are missense or synonymous
+//May also try filtering this list for quality to see if this can be used to remove brute force step later 
 foreach ($variantlist as $variant)
 	{
 	//Variants are only included if they are missense variants or synonymous variants
@@ -206,8 +189,6 @@ foreach ($variantlist as $variant)
 		//Turn the position into a numerical value
 		$position = implode("",$position);
 		
-		echo $variant['HGVSc'] . " = " . $variant['major_consequence'] . "<br>";
-		
 		//Define variant type to record in sequence array
 		if ($variant['major_consequence'] == 'missense_variant')
 			$varianttype = "VariantsMissense";
@@ -225,29 +206,29 @@ foreach ($variantlist as $variant)
 		}
 	}
 
-print_r($sequencenucleotides);
-
-echo "<br>";
-
-
-
 //Get the total count of all variants and U scores 
 $totalvariants = subsetuscoreandvariant($sequencenucleotides);
 
-print_r($totalvariants);
+echo "<p>Variant counts and U scores<br>";
+echo "U Score Missense: " . $totalvariants['UScoreMissense'] . "<br>";
+echo "U Score Synonymous: " . $totalvariants['UScoreSynonymous'] . "<br>";
+echo "Variants Missense: " . $totalvariants['VariantsMissense'] . "<br>";
+echo "Variants Synonymous: " . $totalvariants['VariantsSynonymous'] . "<br>";
 
-echo "<br>";
-
+//This section can possibly be removed
 //Rescale expected number of variants for whole sequence based on observed values in the variant location data from ExAC, the Z scores, and the brute force algorithm.
 //Parameters for deviation range to brute force, current is 25% either way, but may be changed in future
 $deviationrange = 0.25;
 $topdeviation = 1+$deviationrange;
 $bottomdeviation = 1-$deviationrange;
+
 //Range parameters to use in the brute force algorithm
 $minsyn = $totalexpectedsynonymous*$bottomdeviation;
 $maxsyn = $totalexpectedsynonymous*$topdeviation;
 $minmis = $totalexpectedmissense*$bottomdeviation;
 $maxmis = $totalexpectedmissense*$topdeviation;
+
+//Run brute force algorithm to recalculate expected scores
 $estimatedexpectedmissense = brutecalculatee($zscoremissense,$totalvariants['VariantsMissense'],$minmis,$maxmis);
 $estimatedexpectedsynonymous = brutecalculatee($zscoresynonymous,$totalvariants['VariantsSynonymous'],$minsyn,$maxsyn);
 
@@ -257,37 +238,41 @@ $protstart = 165;
 $protfinish = 193;
 $nucstart = ($protstart*3)-2;
 $nucfinish = ($protfinish*3);
-$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides,$nucstart,$nucfinish);
+$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides,$nucrangestart,$nucrangeend);
 
-echo $estimatedexpectedmissense . "<br>";
-echo $estimatedexpectedsynonymous . "<br>";
+echo "<p>Expected variant counts: <br>";
+echo "Missense: " . $estimatedexpectedmissense . "<br>";
+echo "Synonymous: " . $estimatedexpectedsynonymous . "</p>";
 
 //Find the percentage of the U score contributed by the given region
 $subsetmissenseuscorespercent = ($subsetvariantsandscores['UScoreMissense']/$totalvariants['UScoreMissense'])*100;
 $subsetsynonymoususcorespercent = ($subsetvariantsandscores['UScoreSynonymous']/$totalvariants['UScoreSynonymous'])*100;
 
-echo $subsetmissenseuscorespercent . "<br>";
-echo $subsetsynonymoususcorespercent . "<br>";
+echo "<p>Percentage of U score in subset: <br>";
+echo "Missense: " . $subsetmissenseuscorespercent . "<br>";
+echo "Synonymous: " . $subsetsynonymoususcorespercent . "</p>";
 
 //Calculate local expected frequencies from the percentage of U score and the overall expected frequency
 $localmissenseexpected = ($estimatedexpectedmissense/100)*$subsetmissenseuscorespercent;
 $localsynonymousexpected = ($estimatedexpectedsynonymous/100)*$subsetsynonymoususcorespercent;
 
-echo $localmissenseexpected . "<br>";
-echo $localsynonymousexpected . "<br>";
-echo $subsetvariantsandscores['VariantsMissense'] . "<br>";
-echo $subsetvariantsandscores['VariantsSynonymous'] . "<br>";
+echo "<p>Expected and Observed Variants in subset: <br>";
+echo "Missense Expected: " . $localmissenseexpected . "<br>";
+echo "Synonymous Expected: " . $localsynonymousexpected . "<br>";
+echo "Missense Observed: " . $subsetvariantsandscores['VariantsMissense'] . "<br>";
+echo "Synonymous Observed: " . $subsetvariantsandscores['VariantsSynonymous'] . "</p>";
 
 //Calculate local Z scores
 $localzscoremissense = ($localmissenseexpected-$subsetvariantsandscores['VariantsMissense'])/sqrt($localmissenseexpected);
 $localzscoresynonymous = ($localsynonymousexpected-$subsetvariantsandscores['VariantsSynonymous'])/sqrt($localsynonymousexpected);
 
-echo $localzscoremissense . "<br>";
-echo $localzscoresynonymous . "<br>";
+echo "<p>Z Scores and Constraint: <br>";
+echo "Z Score Missense: " . $localzscoremissense . "<br>";
+echo "Z Score Synonymous: " . $localzscoresynonymous . "<br>";
 
 $localconstraintmissense = $localzscoremissense*$adjustmissense;
 $localconstraintsynonymous = $localzscoresynonymous*$adjustsynonymous;
 
-echo $localconstraintmissense . "<br>";
-echo $localconstraintsynonymous . "<br>";
+echo "Constraint Missense: " . $localconstraintmissense . "<br>";
+echo "Constraint Synonymous: " . $localconstraintsynonymous . "</p>";
 ?>
