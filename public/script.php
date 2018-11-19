@@ -7,7 +7,7 @@ include '../functions/uniprot-functions.php';
 include '../functions/exac-functions.php';
 include '../functions/mutationrate-functions.php';
 include '../functions/bruteforce-functions.php';
-include '../../../functions/cycleloop-functions.php';
+include '../functions/cycleloop-functions.php';
 
 //Get gene symbol as user input
 $genesymbol = "BRCA1";
@@ -76,11 +76,11 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 		//Variables to store missense and synonymous mutation rate scores at this sequence position
 		$missense = 0;
 		$synonymous = 0;
-		
+
 		//Calculate U values for each possible change using the U scores function and the adjacent residues
 		$trinucleotide = $sequence[$currentkey-1] . $sequence[$currentkey] . $sequence[$currentkey+1];
 		$uvalues = uvalue($trinucleotide);
-		
+
 		//Generate current codon and new codon template through refence to the current positions
 		if ($codonposition == 1)
 			{
@@ -97,32 +97,32 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 			$currentcodon = $sequence[$currentkey-2] . $sequence[$currentkey-1] . $currentnucleotide;
 			$codontemplate = $sequence[$currentkey-2] . $sequence[$currentkey-1] . "X";
 			}
-		
+
 		//Identify the current amino acid for identifying whether the variant is a missense or a synonymous variant
 		$currentaminoacid = translatecodon($currentcodon);
-		
+
 		foreach ($uvalues as $variant=>$uvalue)
 			{
 			//Produce variant and identify the new amino acid produced
 			$variantcodon = str_replace("X",$variant,$codontemplate);
 			$variantaminoacid = translatecodon($variantcodon);
-			
+
 			//echo $variantcodon . " = " . $variantaminoacid . " ";
-			
+
 			//Add U score to missense or synonymous nucleotide position score
 			if (($currentaminoacid != $variantaminoacid) AND ($variantaminoacid != "*"))
 				$missense = $missense+$uvalue['U'];
 			elseif (($currentaminoacid == $variantaminoacid) AND ($variantaminoacid != "*"))
 				$synonymous = $synonymous+$uvalue['U'];
 			}
-		
+
 		//Record U scores in by position array and in the total scores array
 		$positionuscores = array("UScoreMissense"=>$missense,"UScoreSynonymous"=>$synonymous);
 		$sequencenucleotides[$sequenceposition] = $positionuscores;
 		$totalmissense = $totalmissense+$missense;
 		$totalsynonymous = $totalsynonymous+$synonymous;
 		}
-	
+
 	//Increment the codon position counter and the sequence position counter
 	$codonposition = frameinc($codonposition,"123");
 	$sequenceposition++;
@@ -145,7 +145,7 @@ echo "Adjustment Factor Synonymous: " . $adjustsynonymous . "</p>";
 $variantlist = exacvariants($ids);
 
 //Filter variants to only include variants that are missense or synonymous
-//May also try filtering this list for quality to see if this can be used to remove brute force step later 
+//May also try filtering this list for quality to see if this can be used to remove brute force step later
 foreach ($variantlist as $variant)
 	{
 	//Variants are only included if they are missense variants or synonymous variants
@@ -153,7 +153,7 @@ foreach ($variantlist as $variant)
 		{
 		//Extract position from the HGVSc array element in order to identify where a unique variant occurs
 		$hgvsc = $variant['HGVSc'];
-		
+
 		//Define where to start and stop retrieving integers to identify a position from a HGVSc identifier
 		if ((strpos($variant['HGVSc'],"del") !== false) AND (strpos($variant['HGVSc'],"ins") !== false) AND (strpos($variant['HGVSc'],"_") !== false))
 			{
@@ -167,7 +167,7 @@ foreach ($variantlist as $variant)
 			$opens = array(".");
 			$closes = array("A","C","G","T");
 			}
-		
+
 		//Parameters to begin extracting integer position
 		$position = str_split($variant['HGVSc']);
 		$extracting = false;
@@ -176,7 +176,7 @@ foreach ($variantlist as $variant)
 			{
 			if ($extracting == false)
 				unset($position[$positionkey]);
-			
+
 			if (in_array($character,$opens) == true)
 				$extracting = true;
 			elseif (in_array($character,$closes) == true)
@@ -185,16 +185,16 @@ foreach ($variantlist as $variant)
 				unset($position[$positionkey]);
 				}
 			}
-		
+
 		//Turn the position into a numerical value
 		$position = implode("",$position);
-		
+
 		//Define variant type to record in sequence array
 		if ($variant['major_consequence'] == 'missense_variant')
 			$varianttype = "VariantsMissense";
 		elseif ($variant['major_consequence'] == 'synonymous_variant')
 			$varianttype = "VariantsSynonymous";
-		
+
 		if (isset($sequencenucleotides[$position]) == true)
 			{
 			//Assign number of variants to the position based on the variant location retrieved from ExAC
@@ -206,7 +206,7 @@ foreach ($variantlist as $variant)
 		}
 	}
 
-//Get the total count of all variants and U scores 
+//Get the total count of all variants and U scores
 $totalvariants = subsetuscoreandvariant($sequencenucleotides);
 
 echo "<p>Variant counts and U scores<br>";
