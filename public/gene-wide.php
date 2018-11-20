@@ -1,19 +1,7 @@
 <?php
-//Include files containing shared functions which can also be used by other scripts
-include_once '../functions/api-functions.php';
-include_once '../functions/dna-functions.php';
-include_once '../functions/uniprot-functions.php';
-include_once '../functions/ensembl-functions.php';
-include_once '../functions/mutationrate-functions.php';
-include_once '../functions/exac-functions.php';
-include_once '../functions/bruteforce-functions.php';
-include_once '../functions/cycleloop-functions.php';
-
-//Automatically define gene symbol and nucleotide around which to search if not already specified
+//Define gene symbol if it is not already defined
 if (isset($genesymbol) == false)
 	$genesymbol = "BRCA1";
-if (isset($checknucleotide) == false)
-	$checknucleotide = 350;
 
 //Get the ENSG and LRG IDs from the gene symbol input which can be used for querying other functions
 $ids = getsequenceids($genesymbol);
@@ -205,46 +193,5 @@ $maxmis = $globalresults['ExpectedMissense']*$topdeviation;
 $globalresults['AdjustedExpectedMissense'] = brutecalculatee($globalresults['ZMissense'],$totalvariants['VariantsMissense'],$minmis,$maxmis);
 $globalresults['AdjustedExpectedSynonymous'] = brutecalculatee($globalresults['ZSynonymous'],$totalvariants['VariantsSynonymous'],$minsyn,$maxsyn);
 
-//Retrieve U Scores and Variant frequenies for a given range
-//$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides);
-$protstart = 165;
-$protfinish = 193;
-$nucstart = ($protstart*3)-2;
-$nucfinish = ($protfinish*3);
-
-//Define nucleotide ranges to check
-$localconstraintresults = array();
-$localconstraintresults[0] = array("Name"=>"+/-10","Start"=>$checknucleotide-10,"End"=>$checknucleotide+10);
-$localconstraintresults[1] = array("Name"=>"+/-20","Start"=>$checknucleotide-20,"End"=>$checknucleotide+20);
-$localconstraintresults[2] = array("Name"=>"+/-30","Start"=>$checknucleotide-20,"End"=>$checknucleotide+30);
-
-//Calculate the local constraint for all the ranges specified in the checkranges array and populate the results array
-foreach ($localconstraintresults as $constraintoutput)
-	{
-	$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides,$constraintoutput['Start'],$constraintoutput['End']);
-	$constraintoutput['MissenseObserved'] = $subsetvariantsandscores['VariantsMissense'];
-	$constraintoutput['SynonymouseObserved'] = $subsetvariantsandscores['VariantsSynonymous'];
-
-	//Find the percentage of the U score contributed by the given region
-	$constraintoutput['MissenseUScorePercent'] = ($subsetvariantsandscores['UScoreMissense']/$totalvariants['UScoreMissense'])*100;
-	$constraintoutput['SynonymousUScorePercent'] = ($subsetvariantsandscores['UScoreSynonymous']/$totalvariants['UScoreSynonymous'])*100;
-
-	//Calculate local expected frequencies from the percentage of U score and the overall expected frequency
-	$constraintoutput['MissenseExpected'] = ($globalresults['AdjustedExpectedMissense']/100)*$constraintoutput['MissenseUScorePercent'];
-	$constraintoutput['SynonymousExpected'] = ($globalresults['AdjustedExpectedSynonymous']/100)*$constraintoutput['SynonymousUScorePercent'];
-
-	//Calculate local Z scores
-	$constraintoutput['LocalZMissense'] = ($constraintoutput['MissenseExpected']-$subsetvariantsandscores['VariantsMissense'])/sqrt($constraintoutput['MissenseExpected']);
-	$constraintoutput['LocalZSynonymous'] = ($constraintoutput['SynonymousExpected']-$subsetvariantsandscores['VariantsSynonymous'])/sqrt($constraintoutput['SynonymousExpected']);
-
-	$constraintoutput['ConstraintMissense'] = $constraintoutput['LocalZMissense']*$globalresults['AdjustMissense'];
-	$constraintoutput['ConstraintSynonymous'] = $constraintoutput['LocalZSynonymous']*$globalresults['AdjustSynonymous'];
-
-	array_push($localconstraintresults,$constraintoutput);
-	}
-
-/*
-Global (gene wide) result can be retrieved by calling $globalresults
-Local (by range specified) results can be retrieved by calling $localconstraintresults
-*/
+//Call $globalresults to retrieve genewide constraint metric data
 ?>
