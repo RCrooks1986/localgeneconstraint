@@ -12,7 +12,7 @@ function translatecodon($codon,$outputtype="1")
 	//Default output to 1
 	if (($outputtype != "1") AND ($outputtype != "3") AND ($outputtype != "Name"))
 		$outputtype = 1;
-	
+
 	//Genetic code
 	$geneticcode = array();
 	$geneticcode['AAA'] = array("1"=>"K","3"=>"Lys","Name"=>"Lysine");
@@ -79,11 +79,26 @@ function translatecodon($codon,$outputtype="1")
 	$geneticcode['TTC'] = array("1"=>"F","3"=>"Phe","Name"=>"Phenylalanine");
 	$geneticcode['TTG'] = array("1"=>"L","3"=>"Leu","Name"=>"Leucine");
 	$geneticcode['TTT'] = array("1"=>"F","3"=>"Phe","Name"=>"Phenylalanine");
-	
+
 	$aminoacid = $geneticcode[$codon];
 	$aminoacid = $aminoacid[$outputtype];
-	
+
 	Return $aminoacid;
+	}
+//---FunctionBreak---
+/*Convert a position in an amino acid sequence to a position in a cDNA sequence
+
+$position is the position in the amino acid sequence
+
+Output is an array of the positions of the 3 nucleotides that make up that codon [1], [2] and [3].*/
+//---DocumentationBreak---
+function proteintodnaposition($position)
+	{
+	$output = array();
+	$output[3] = $position*3;
+	$output[2] = $output[2]-1;
+	$output[1] = $output[1]-1;
+	Return $output;
 	}
 //---FunctionBreak---
 ?>
