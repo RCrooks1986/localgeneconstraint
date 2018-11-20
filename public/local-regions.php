@@ -1,6 +1,6 @@
 <?php
 //Calculate the local constraint for all the ranges specified in the checkranges array and populate the results array
-foreach ($localconstraintresults as $constraintoutput)
+foreach ($localconstraintresults as $localconstraintresultskey=>$constraintoutput)
 	{
 	$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides,$constraintoutput['Start'],$constraintoutput['End']);
 	$constraintoutput['MissenseObserved'] = $subsetvariantsandscores['VariantsMissense'];
@@ -21,6 +21,6 @@ foreach ($localconstraintresults as $constraintoutput)
 	$constraintoutput['ConstraintMissense'] = $constraintoutput['LocalZMissense']*$globalresults['AdjustMissense'];
 	$constraintoutput['ConstraintSynonymous'] = $constraintoutput['LocalZSynonymous']*$globalresults['AdjustSynonymous'];
 
-	array_push($localconstraintresults,$constraintoutput);
+	$localconstraintresults[$localconstraintresultskey] = $constraintoutput;
 	}
 ?>

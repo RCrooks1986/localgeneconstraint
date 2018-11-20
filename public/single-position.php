@@ -1,16 +1,11 @@
 <?php
+//Input $genesymbol and $checknucleotide to define the gene and which nucleotide is being checked for local constraint
+
 //Include shared list of required files
-include_once 'required-file.php';
+include_once 'required-files.php';
 
-//Retrieve gene wide
+//Retrieve gene wide constraint data, variant and uscore data
 include 'gene-wide.php';
-
-//Retrieve U Scores and Variant frequenies for a given range
-//$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides);
-$protstart = 165;
-$protfinish = 193;
-$nucstart = ($protstart*3)-2;
-$nucfinish = ($protfinish*3);
 
 //Automatically define a nucleotide around which to search if not already specified
 if (isset($checknucleotide) == false)
@@ -30,7 +25,7 @@ Local (by range specified) results can be retrieved by calling $localconstraintr
 */
 
 //For troubleshooting for downsteam processing print these to check output
-//print_r $globalresults;
-//echo "<br>"
-//print_r $localconstraintresults;
+print_r($globalresults);
+echo "<br>";
+print_r($localconstraintresults);
 ?>
