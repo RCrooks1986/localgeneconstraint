@@ -29,24 +29,24 @@ $globalresults['AdjustMissense'] = $constaintscores['hits'][0]['exac']['all']['m
 $globalresults['AdjustSynonymous'] = $constaintscores['hits'][0]['exac']['all']['syn_z']/$globalresults['ZSynonymous'];
 
 //Get the gene sequence from the CDS identified by the ENST ID
-$sequence = getensemblsequencefromenst($ids);
+$cdnasequence = getensemblsequencefromenst($ids);
 
 //Turn sequence into array in order to process it as a loop
-$sequence = str_split($sequence);
+$cdnasequence = str_split($cdnasequence);
 
 //Define codon and sequence position for Uscore loop
 $codonposition = 1;
 $sequenceposition = 1;
 //Variable to denote where the stop codon is, do not analyse stop codons
-$endcodon = count($sequence)-2;
+$endcodon = count($cdnasequence)-2;
 
 //Variables to store the total u scores for missense and synonymous variation in gene
 $totalmissense = 0;
 $totalsynonymous = 0;
 
-//Calculate the liklihood of missense and nonsense variants at each nucleotide
+//Calculate the liklihood of missense and synonymous variants at each nucleotide
 $sequencenucleotides = array();
-foreach($sequence as $currentkey=>$currentnucleotide)
+foreach($cdnasequence as $currentkey=>$currentnucleotide)
 	{
 	//Check that the sequence position is not near a splice site using the checksplice function and the $exonboundaries['Boundaries'] array
 	//Also for if statement check that the sequence is not at the start or stop codon, as these would not be missense variants
@@ -58,24 +58,24 @@ foreach($sequence as $currentkey=>$currentnucleotide)
 		$synonymous = 0;
 
 		//Calculate U values for each possible change using the U scores function and the adjacent residues
-		$trinucleotide = $sequence[$currentkey-1] . $sequence[$currentkey] . $sequence[$currentkey+1];
+		$trinucleotide = $cdnasequence[$currentkey-1] . $cdnasequence[$currentkey] . $cdnasequence[$currentkey+1];
 		$uvalues = uvalue($trinucleotide);
 
 		//Generate current codon and new codon template through refence to the current positions
 		if ($codonposition == 1)
 			{
-			$currentcodon = $currentnucleotide . $sequence[$currentkey+1] . $sequence[$currentkey+2];
-			$codontemplate = "X" . $sequence[$currentkey+1] . $sequence[$currentkey+2];
+			$currentcodon = $currentnucleotide . $cdnasequence[$currentkey+1] . $cdnasequence[$currentkey+2];
+			$codontemplate = "X" . $cdnasequence[$currentkey+1] . $cdnasequence[$currentkey+2];
 			}
 		elseif ($codonposition == 2)
 			{
-			$currentcodon = $sequence[$currentkey-1] . $currentnucleotide . $sequence[$currentkey+1];
-			$codontemplate = $sequence[$currentkey-1] . "X" . $sequence[$currentkey+1];
+			$currentcodon = $cdnasequence[$currentkey-1] . $currentnucleotide . $cdnasequence[$currentkey+1];
+			$codontemplate = $cdnasequence[$currentkey-1] . "X" . $cdnasequence[$currentkey+1];
 			}
 		elseif ($codonposition == 3)
 			{
-			$currentcodon = $sequence[$currentkey-2] . $sequence[$currentkey-1] . $currentnucleotide;
-			$codontemplate = $sequence[$currentkey-2] . $sequence[$currentkey-1] . "X";
+			$currentcodon = $cdnasequence[$currentkey-2] . $cdnasequence[$currentkey-1] . $currentnucleotide;
+			$codontemplate = $cdnasequence[$currentkey-2] . $cdnasequence[$currentkey-1] . "X";
 			}
 
 		//Identify the current amino acid for identifying whether the variant is a missense or a synonymous variant
