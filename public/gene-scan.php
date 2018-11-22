@@ -1,5 +1,5 @@
 <?php
-//Input $genesymbol and $checknucleotide to define the gene and which nucleotide is being checked for local constraint
+//Input $genesymbol to define the gene and which nucleotide is being checked for local constraint
 
 //Include shared list of required files
 include_once 'required-files.php';
@@ -17,7 +17,7 @@ $sequencelength = count($cdnasequence);
 $centreposition = 1;
 while ($centreposition < $sequencelength)
 	{
-	$localconstraintresults[$centreposition] = array("Name"=>$centreposition,"Start"=>$centreposition-30,"End"=>$centreposition+30);
+	$localconstraintresults[$centreposition] = array("Name"=>$centreposition,"Start"=>$centreposition-15,"End"=>$centreposition+15);
 	$centreposition++;
 	}
 
