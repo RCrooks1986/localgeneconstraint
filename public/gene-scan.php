@@ -17,7 +17,7 @@ $sequencelength = count($cdnasequence);
 $centreposition = 1;
 while ($centreposition < $sequencelength)
 	{
-	$localconstraintresults[$centreposition] = array("Name"=>$centreposition,"Start"=>$centreposition-15,"End"=>$centreposition+15);
+	$localconstraintresults[$centreposition] = array("Name"=>$centreposition,"Start"=>$centreposition-90,"End"=>$centreposition+90);
 	$centreposition++;
 	}
 
