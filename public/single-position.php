@@ -25,7 +25,7 @@ Local (by range specified) results can be retrieved by calling $localconstraintr
 */
 
 //For troubleshooting for downsteam processing print these to check output
-print_r($globalresults);
-echo "<br>";
-print_r($localconstraintresults);
+//print_r($globalresults);
+//echo "<br>";
+//print_r($localconstraintresults);
 ?>
