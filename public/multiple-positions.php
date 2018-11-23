@@ -1,4 +1,5 @@
 <?php
+//Sort variants by gene symbol
 function variantsort($a,$b)
 	{
 	if ($a['GeneSymbol'] == $b['GeneSymbol'])
@@ -21,7 +22,7 @@ if (isset($variants) == false)
 	$variants[1] = array("GeneSymbol"=>"NF1","Nucleotide"=>2823);
 	}
 
-usort()
+usort($variants,variantsort);
 
 $variantresults = array();
 
