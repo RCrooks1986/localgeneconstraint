@@ -1,4 +1,13 @@
 <?php
+function variantsort($a,$b)
+	{
+	if ($a['GeneSymbol'] == $b['GeneSymbol'])
+		{
+		return 0;
+		}
+	return ($a['GeneSymbol'] < $b['GeneSymbol']) ? -1 : 1;
+	}
+
 //Input a 2 dimensional array containing ['GeneSymbol'] and ['Nucleotide'] elements in each element
 
 //Include shared list of required files
@@ -11,6 +20,8 @@ if (isset($variants) == false)
 	$variants[0] = array("GeneSymbol"=>"BRCA1","Nucleotide"=>3632);
 	$variants[1] = array("GeneSymbol"=>"NF1","Nucleotide"=>2823);
 	}
+
+usort()
 
 $variantresults = array();
 
@@ -49,11 +60,11 @@ foreach($variants as $inputvariantdetails)
 	$variantresultsline = array_merge($inputvariantdetails,$generesults,$localresults);
 	array_push($variantresults,$variantresultsline);
 	}
+
 /*
-Global (gene wide) result can be retrieved by calling $globalresults
-Local (by range specified) results can be retrieved by calling $localconstraintresults
+Gene results can be retrieved from $variantresults
 */
 
 //For troubleshooting for downsteam processing print these to check output
-print_r($variantresults);
+//print_r($variantresults);
 ?>
