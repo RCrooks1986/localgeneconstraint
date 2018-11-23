@@ -22,7 +22,7 @@ if (isset($variants) == false)
 	$variants[1] = array("GeneSymbol"=>"NF1","Nucleotide"=>2823);
 	}
 
-usort($variants,variantsort);
+usort($variants,'variantsort');
 
 $variantresults = array();
 
@@ -32,6 +32,8 @@ foreach($variants as $inputvariantdetails)
 	if ($inputvariantdetails['GeneSymbol'] != $genesymbol)
 		{
 		$genesymbol = $inputvariantdetails['GeneSymbol'];
+
+		echo $genesymbol . "<br>";
 
 		//Retrieve gene wide constraint data, variant and uscore data
 		include 'gene-wide.php';
