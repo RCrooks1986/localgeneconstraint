@@ -1,5 +1,9 @@
 <?php
-//Input $genesymbol to define the gene and which nucleotide is being checked for local constraint
+//Input $genesymbol to define the gene being subject to window scanning
+//Input $window to define the +/- window size, default is 30
+
+if (isset($window) == false)
+	$window = 30;
 
 //Include shared list of required files
 include_once 'required-files.php';
@@ -17,7 +21,7 @@ $sequencelength = count($cdnasequence);
 $centreposition = 1;
 while ($centreposition < $sequencelength)
 	{
-	$localconstraintresults[$centreposition] = array("Name"=>$centreposition,"Start"=>$centreposition-90,"End"=>$centreposition+90);
+	$localconstraintresults[$centreposition] = array("Name"=>$centreposition,"Start"=>$centreposition-$window,"End"=>$centreposition+$window);
 	$centreposition++;
 	}
 
