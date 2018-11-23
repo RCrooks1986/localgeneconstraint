@@ -33,8 +33,6 @@ foreach($variants as $inputvariantdetails)
 		{
 		$genesymbol = $inputvariantdetails['GeneSymbol'];
 
-		echo $genesymbol . "<br>";
-
 		//Retrieve gene wide constraint data, variant and uscore data
 		include 'gene-wide.php';
 
