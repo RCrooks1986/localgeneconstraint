@@ -3,7 +3,7 @@
 Built in gene identifiers that this script uses
 These can be amended and updated by the system administrator
 It is recommended that frequently used genes are contained in this list
-If a gene is not on this list the script will attempt to look up these details, but it may not be reliable
+If a gene is not on this list scripts can attempt to look up these details, but it may not be reliable
 */
 $genelist['ADAMTS10'] = array("GeneSymbol"=>"ADAMTS10","ENST"=>"ENST00000270328","ENSG"=>"ENSG00000142303","UniProt"=>"Q9H324");
 $genelist['ADAMTS17'] = array("GeneSymbol"=>"ADAMTS17","ENST"=>"ENST00000268070","ENSG"=>"ENSG00000140470","UniProt"=>"Q8TE56");
