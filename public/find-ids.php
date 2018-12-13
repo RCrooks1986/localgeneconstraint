@@ -1,6 +1,4 @@
 <?php
-$genesymbol = "JUN";
-
 //Default to BRCA1
 if (isset($genesymbol) == false)
   $genesymbol = "BRCA1";
@@ -47,6 +45,4 @@ else
   if (count($transcripts) == 1)
     $ids['ENST'] = $transcripts[0];
   }
-
-print_r($ids);
 ?>
