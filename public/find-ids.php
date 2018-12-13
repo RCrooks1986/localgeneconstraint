@@ -1,6 +1,4 @@
 <?php
-$genesymbol = "JUN";
-
 if (isset($genesymbol) == false)
   $genesymbol = "BRCA1";
 
@@ -30,6 +28,4 @@ else
       }
     }
   }
-
-print_r($ids);
 ?>
