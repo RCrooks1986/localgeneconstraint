@@ -9,24 +9,26 @@ Returns true or false whether the position is near a splice site or not*/
 //---DocumentationBreak---
 function checksplice($position,$exons)
 	{
-	$splice = false;
-	
-	//Specify the size of the exon region, account for the region being between 
+	//Default to within the splice site, set to false if found sufficiently witin an exon
+	$splice = true;
+
+	//Specify the size of the splice region, 1 means only at the splice site
 	$region = 1;
-	$region = $region-0.5;
-	
+	$region = $region-1;
+
 	foreach ($exons as $exon)
 		{
-		//Define boundaries for this splice site
-		$exon = $exon+0.5;
-		$high = $exon+$region;
-		$low = $exon-$region;
-		
-		//Set to true if within splice site boundary
-		if (($position >= $low) AND ($position <= $high))	
-			$splice = true;
+		//Get buffer zone
+		$start = $exon['Start']+$region;
+		$end = $exon['End']-$region;
+
+		//Reset splice to true if within an exon
+		if (($position > $start) AND ($position < $end))
+			{
+			$splice = false;
+			}
 		}
-	
+
 	Return $splice;
 	}
 //---FunctionBreak---
@@ -39,25 +41,25 @@ Note, this will get trinucleotides from position 5'+1 to 3'-1 to incorporate fla
 function sequencetoblocks($dna)
 	{
 	$dna = str_split($dna);
-	
+
 	//Start and stop 1 position away from ends
 	$stop = count($dna)-1;
 	$key = 1;
-	
+
 	$chunks = array();
-	
+
 	while ($key < $stop)
 		{
 		$chunk = $dna[$key-1] . $dna[$key] . $dna[$key+1];
-		
+
 		array_push($chunks,$chunk);
 		$key++;
 		}
-	
+
 	Return $chunks;
 	}
 //---FunctionBreak---
-/*Look up u scores for a changes from one nucleotide to another 
+/*Look up u scores for a changes from one nucleotide to another
 
 $trinucleotide is data for the liklihood of each change*/
 //---DocumentationBreak---
@@ -65,7 +67,7 @@ function uvalue($trinucleotide)
 	{
 	//Make upper case
 	$trinucleotide = strtoupper($trinucleotide);
-	
+
 	//uscores for each change
 	$uvalueslist = array();
 	$uvalueslist['AAAC'] = array("U"=>0.129,"SD"=>0.049);
@@ -260,7 +262,7 @@ function uvalue($trinucleotide)
 	$uvalueslist['TTTA'] = array("U"=>0.179,"SD"=>0.09);
 	$uvalueslist['TTTC'] = array("U"=>0.641,"SD"=>0.14);
 	$uvalueslist['TTTG'] = array("U"=>0.375,"SD"=>0.087);
-	
+
 	//Create list of variants to cycle through
 	$variants = array();
 	$listtrinucleotides = str_split($trinucleotide);
@@ -272,16 +274,16 @@ function uvalue($trinucleotide)
 		array_push($variants,"G");
 	if ($listtrinucleotides[1] != "T")
 		array_push($variants,"T");
-	
+
 	//Make list of uscores
 	$uscores = array();
 	foreach ($variants as $variant)
 		{
 		$arraylookup = $trinucleotide . $variant;
-		
+
 		$uscores[$variant] = $uvalueslist[$arraylookup];
 		}
-	
+
 	Return $uscores;
 	}
 //---FunctionBreak---
@@ -297,25 +299,25 @@ function subsetuscoreandvariant($sequence,$min="",$max="")
 		$min = 0-INF;
 	if (is_numeric($max) == false)
 		$max = INF;
-	
+
 	//Create array to hold U Scores and variant counts
 	$output = array();
 	$output['UScoreMissense'] = 0;
 	$output['UScoreSynonymous'] = 0;
 	$output['VariantsMissense'] = 0;
 	$output['VariantsSynonymous'] = 0;
-		
+
 	foreach ($sequence as $position=>$variantdata)
 		{
 		//Only include if within the range specified by max and min
 		if (($position >= $min) AND ($position <= $max))
-			{			
+			{
 			//Add missense and synonymous UScores to UScores in outpu array
 			if (isset($variantdata['UScoreMissense']) == true)
 				$output['UScoreMissense'] = $output['UScoreMissense']+$variantdata['UScoreMissense'];
 			if (isset($variantdata['UScoreSynonymous']) == true)
 				$output['UScoreSynonymous'] = $output['UScoreSynonymous']+$variantdata['UScoreSynonymous'];
-			
+
 			//Add missense and synonymous variants to variant counts in output array
 			if (isset($variantdata['VariantsMissense']) == true)
 				$output['VariantsMissense'] = $output['VariantsMissense']+$variantdata['VariantsMissense'];
@@ -323,7 +325,7 @@ function subsetuscoreandvariant($sequence,$min="",$max="")
 				$output['VariantsSynonymous'] = $output['VariantsSynonymous']+$variantdata['VariantsSynonymous'];
 			}
 		}
-	
+
 	Return $output;
 	}
 //---FunctionBreak---
