@@ -1,8 +1,17 @@
 <?php
+include_once 'required-files.php';
+
 //Define gene symbol if it is not already defined
 if (isset($genesymbol) == false)
 	$genesymbol = "BRCA1";
 
+//Get gene and transcript identifiers from database or API
+include 'find-ids.php';
+
+//Get Exon boundaries
+include 'get-exons.php';
+
+/*
 //Get the ENSG and LRG IDs from the gene symbol input which can be used for querying other functions
 $ids = getsequenceids($genesymbol);
 
@@ -13,6 +22,7 @@ $exons = getexacexons($ids['ENSG']);
 //Get the exon boundaries and ENST ID from the exons array
 $exonboundaries = exonsandcds($exons);
 $ids['ENST'] = $exonboundaries['CDS']['ENST'];
+*/
 
 //Get constaint scores for this gene from the API
 //Reform this function so that it gets a constraint table, z scores and adjustment factors and exports them as an array
@@ -50,7 +60,7 @@ foreach($cdnasequence as $currentkey=>$currentnucleotide)
 	{
 	//Check that the sequence position is not near a splice site using the checksplice function and the $exonboundaries['Boundaries'] array
 	//Also for if statement check that the sequence is not at the start or stop codon, as these would not be missense variants
-	$splicecheck = checksplice($sequenceposition,$exonboundaries['Boundaries']);
+	$splicecheck = checksplice($sequenceposition,$exons);
 	if (($splicecheck == false) AND ($sequenceposition > 3) AND ($sequenceposition < $endcodon))
 		{
 		//Variables to store missense and synonymous mutation rate scores at this sequence position
