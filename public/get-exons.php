@@ -4,7 +4,7 @@ if (isset($ids['ENST']) == false)
   $ids = array("ENST"=>"ENST00000471181");
 
 //Get array of exons with genomic coordinates from Ensembl API using ENST ID
-$restapiurl = "https://rest.ensembl.org/map/cds/" . $ids['ENST'] . "/1..1000?content-type=application/json";
+$restapiurl = "https://rest.ensembl.org/map/cds/" . $ids['ENST'] . "/1..100000?content-type=application/json";
 $apiexons = file_get_contents($restapiurl);
 $apiexons = json_decode($apiexons,true);
 $apiexons = $apiexons['mappings'];

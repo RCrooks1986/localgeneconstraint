@@ -2,6 +2,8 @@
 //Calculate the local constraint for all the ranges specified in the checkranges array and populate the results array
 foreach ($localconstraintresults as $localconstraintresultskey=>$constraintoutput)
 	{
+	echo "Start: " . $constraintoutput['Start'];
+	echo "End: " . $constraintoutput['End'];
 	$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides,$constraintoutput['Start'],$constraintoutput['End']);
 	$constraintoutput['MissenseObserved'] = $subsetvariantsandscores['VariantsMissense'];
 	$constraintoutput['SynonymouseObserved'] = $subsetvariantsandscores['VariantsSynonymous'];

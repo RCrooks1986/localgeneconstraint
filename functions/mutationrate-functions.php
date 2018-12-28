@@ -307,6 +307,10 @@ function subsetuscoreandvariant($sequence,$min="",$max="")
 	$output['VariantsMissense'] = 0;
 	$output['VariantsSynonymous'] = 0;
 
+	echo "Sequences to find variants:<br>";
+	print_r($sequence);
+	echo "<br>";
+
 	foreach ($sequence as $position=>$variantdata)
 		{
 		//Only include if within the range specified by max and min

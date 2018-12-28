@@ -3,26 +3,13 @@ include_once 'required-files.php';
 
 //Define gene symbol if it is not already defined
 if (isset($genesymbol) == false)
-	$genesymbol = "BRCA1";
+	$genesymbol = "BRCA2";
 
 //Get gene and transcript identifiers from database or API
 include 'find-ids.php';
 
 //Get Exon boundaries
 include 'get-exons.php';
-
-/*
-//Get the ENSG and LRG IDs from the gene symbol input which can be used for querying other functions
-$ids = getsequenceids($genesymbol);
-
-//Get the exons from ExAc by querying with the ENSG sequence using the getexacexons function
-//ExAc is used as the source of the exons as this makes it compatible with the missense variants data
-$exons = getexacexons($ids['ENSG']);
-
-//Get the exon boundaries and ENST ID from the exons array
-$exonboundaries = exonsandcds($exons);
-$ids['ENST'] = $exonboundaries['CDS']['ENST'];
-*/
 
 //Get constaint scores for this gene from the API
 //Reform this function so that it gets a constraint table, z scores and adjustment factors and exports them as an array

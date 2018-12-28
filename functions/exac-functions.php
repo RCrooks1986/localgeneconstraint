@@ -13,30 +13,30 @@ function getexacexons($id)
 	$exonjson = getrawdatafromapi($id,"ExACGetTranscript");
 	$exons = json_decode($exonjson,true);
 	$exons = $exons['exons'];
-	
+
 	//Container for exon coordinates
 	$coordinates = array();
-	
+
 	//Container for CDS coordinate starts
 	$cdscoordinatesstart = array();
-	
+
 	foreach ($exons as $exon)
 		{
 		$transcriptid = $exon['transcript_id'];
-		
+
 		//Create transcript array where coordinates for that transcript are placed
 		if (isset($coordinates[$transcriptid]) == false)
 			{
 			$coordinates[$transcriptid] = array();
 			$cdscoordinatesstart[$transcriptid] = 1;
 			}
-		
+
 		//Coordinates to place in output array
 		$coordinatesline = array();
 		$coordinatesline['startchrom'] = $exon['start'];
 		$coordinatesline['stopchrom'] = $exon['stop'];
 		$coordinatesline['strand'] = $exon['strand'];
-		
+
 		//Add CDS coffee
 		if ($exon['feature_type'] == "CDS")
 			{
@@ -45,10 +45,10 @@ function getexacexons($id)
 			$coordinatesline['stopcds'] = $coordinatesline['startcds']+$distance;
 			$cdscoordinatesstart[$transcriptid] = $coordinatesline['stopcds']+1;
 			}
-		
+
 		array_push($coordinates[$transcriptid],$coordinatesline);
 		}
-	
+
 	Return $coordinates;
 	}
 //---FunctionBreak---
@@ -63,23 +63,23 @@ function exonsandcds($exons)
 	//Boundaries and CDS to output
 	$boundaries = array();
 	$cds = array();
-	
+
 	//ENST and exons
 	$enst = array_keys($exons);
 	$enst = array_shift($enst);
 	$exons = array_shift($exons);
-	
+
 	//Get all Exon boundaries in the CDS
 	foreach ($exons as $exon)
 		{
 		if ((isset($exon['startcds']) == true) AND (isset($exon['stopcds']) == true))
 			array_push($boundaries,$exon['stopcds']);
 		}
-	
+
 	//Get the end of the CDS
 	sort($boundaries);
 	$endcds = end($boundaries);
-	
+
 	//Format output as array and return
 	$cds = array("ENST"=>$enst,"End"=>$endcds);
 	$output = array("CDS"=>$cds,"Boundaries"=>$boundaries);
@@ -97,11 +97,11 @@ function exacconstraint($ids)
 	//Retrieve data from API and convert JSON format output to PHP array
 	$constaintscores = getrawdatafromapi($ids['ENST'],"ConstraintMetrics");
 	$constaintscores = json_decode($constaintscores,true);
-	
+
 	Return $constaintscores;
 	}
 //---FunctionBreak---
-/*Extract ExAC variant list and returns them as an array 
+/*Extract ExAC variant list and returns them as an array
 
 $ids is the array of sequence IDs from which the ENSG ID must be present
 
@@ -112,7 +112,7 @@ function exacvariants($ids)
 	//Retrieve variants from API and convert JSON format output to PHP array
 	$variants = getrawdatafromapi($ids['ENSG'],"ExACVariants");
 	$variants = json_decode($variants,true);
-	
+
 	Return $variants;
 	}
 //---FunctionBreak---
