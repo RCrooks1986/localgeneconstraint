@@ -11,6 +11,9 @@ include 'find-ids.php';
 //Get Exon boundaries
 include 'get-exons.php';
 
+print_r($ids);
+echo "<br>";
+
 //Get constaint scores for this gene from the API
 //Reform this function so that it gets a constraint table, z scores and adjustment factors and exports them as an array
 $constaintscores = exacconstraint($ids);
