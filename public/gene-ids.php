@@ -45,7 +45,7 @@ $genelist['MAP2K2'] = array("GeneSymbol"=>"MAP2K2","ENST"=>"ENST00000262948","EN
 $genelist['MAP3K1'] = array("GeneSymbol"=>"MAP3K1","ENST"=>"ENST00000399503","ENSG"=>"ENSG00000095015","UniProt"=>"Q13233");
 $genelist['MLH1'] = array("GeneSymbol"=>"MLH1","ENST"=>"ENST00000231790","ENSG"=>"ENSG00000076242","UniProt"=>"P40692");
 $genelist['MSH2'] = array("GeneSymbol"=>"MSH2","ENST"=>"ENST00000233146","ENSG"=>"ENSG00000095002","UniProt"=>"P43246");
-$genelist['MSH6'] = array("GeneSymbol"=>"MSH6","ENST"=>"ENST00000234420","ENSG"=>"ENSG00000116062","UniProt"=>"P52701");
+//$genelist['MSH6'] = array("GeneSymbol"=>"MSH6","ENST"=>"ENST00000234420","ENSG"=>"ENSG00000116062","UniProt"=>"P52701");
 $genelist['MYH11'] = array("GeneSymbol"=>"MYH11","ENST"=>"ENST00000396324","ENSG"=>"ENSG00000133392","UniProt"=>"P35749");
 $genelist['NF1'] = array("GeneSymbol"=>"NF1","ENST"=>"ENST00000358273","ENSG"=>"ENSG00000196712","UniProt"=>"P21359");
 $genelist['NR0B1'] = array("GeneSymbol"=>"NR0B1","ENST"=>"ENST00000378970","ENSG"=>"ENSG00000169297","UniProt"=>"P51843");
@@ -65,12 +65,12 @@ $genelist['SMAD3'] = array("GeneSymbol"=>"SMAD3","ENST"=>"ENST00000327367","ENSG
 $genelist['SOS1'] = array("GeneSymbol"=>"SOS1","ENST"=>"ENST00000426016","ENSG"=>"ENSG00000115904","UniProt"=>"Q07889");
 $genelist['SOX9'] = array("GeneSymbol"=>"SOX9","ENST"=>"ENST00000245479","ENSG"=>"ENSG00000125398","UniProt"=>"P48436");
 $genelist['SPRED1'] = array("GeneSymbol"=>"SPRED1","ENST"=>"ENST00000299084","ENSG"=>"ENSG00000166068","UniProt"=>"Q7Z699");
-$genelist['SRD5A2'] = array("GeneSymbol"=>"SRD5A2","ENST"=>"ENST00000622030","ENSG"=>"ENSG00000049319","UniProt"=>"P31213");
+//$genelist['SRD5A2'] = array("GeneSymbol"=>"SRD5A2","ENST"=>"ENST00000622030","ENSG"=>"ENSG00000049319","UniProt"=>"P31213");
 $genelist['SRY'] = array("GeneSymbol"=>"SRY","ENST"=>"ENST00000383070","ENSG"=>"ENSG00000184895","UniProt"=>"Q05066");
 $genelist['STAR'] = array("GeneSymbol"=>"STAR","ENST"=>"ENST00000276449","ENSG"=>"ENSG00000147465","UniProt"=>"P49675");
 $genelist['TGFB2'] = array("GeneSymbol"=>"TGFB2","ENST"=>"ENST00000366929","ENSG"=>"ENSG00000092969","UniProt"=>"P61812");
 $genelist['TGFBR1'] = array("GeneSymbol"=>"TGFBR1","ENST"=>"ENST00000374994","ENSG"=>"ENSG00000106799","UniProt"=>"P36897");
 $genelist['TGFBR2'] = array("GeneSymbol"=>"TGFBR2","ENST"=>"ENST00000359013","ENSG"=>"ENSG00000163513","UniProt"=>"P37173");
 $genelist['WNT4'] = array("GeneSymbol"=>"WNT4","ENST"=>"ENST00000290167","ENSG"=>"ENSG00000162552","UniProt"=>"P56705");
-$genelist['WT1'] = array("GeneSymbol"=>"WT1","ENST"=>"ENST00000332351","ENSG"=>"ENSG00000184937","UniProt"=>"P19544");
+//$genelist['WT1'] = array("GeneSymbol"=>"WT1","ENST"=>"ENST00000332351","ENSG"=>"ENSG00000184937","UniProt"=>"P19544");
 ?>
