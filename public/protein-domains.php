@@ -1,10 +1,17 @@
 <?php
-$id = "P10275";
+if (isset($ids['UniProt']) == false)
+  {
+  $ids['UniProt'] = "P10275";
+  $testing = true;
+  }
+else
+  $testing = false;
+
 //Get the length of the ID, which is important for reading the GFF file
-$idlen = strlen($id);
+$idlen = strlen($ids['UniProt']);
 
 //Get the GFF file from UniProt
-$uniproturl = "https://www.uniprot.org/uniprot/" . $id . ".gff";
+$uniproturl = "https://www.uniprot.org/uniprot/" . $ids['UniProt'] . ".gff";
 $gff = file_get_contents($uniproturl);
 
 //Get lines from GFF file
@@ -36,5 +43,6 @@ foreach ($gff as $line)
     }
   }
 
-print_r($uniprotdomains);
+if ($testing == true)
+  print_r($uniprotdomains);
 ?>
