@@ -21,7 +21,7 @@ $gff = explode("\n",$gff);
 $uniprotdomains = array();
 foreach ($gff as $line)
   {
-  if (substr($line,0,$idlen) == $id)
+  if (substr($line,0,$idlen) == $ids['UniProt'])
     {
     $line = explode("\t",$line);
 
