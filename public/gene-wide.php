@@ -27,6 +27,7 @@ $globalresults['AdjustSynonymous'] = $constaintscores['hits'][0]['exac']['all'][
 
 //Get the gene sequence from the CDS identified by the ENST ID
 $cdnasequence = getensemblsequencefromenst($ids);
+$genelength = strlen($cdnasequence);
 
 //Turn sequence into array in order to process it as a loop
 $cdnasequence = str_split($cdnasequence);
