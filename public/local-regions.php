@@ -4,7 +4,7 @@ foreach ($localconstraintresults as $localconstraintresultskey=>$constraintoutpu
 	{
 	$subsetvariantsandscores = subsetuscoreandvariant($sequencenucleotides,$constraintoutput['Start'],$constraintoutput['End']);
 	$constraintoutput['MissenseObserved'] = $subsetvariantsandscores['VariantsMissense'];
-	$constraintoutput['SynonymouseObserved'] = $subsetvariantsandscores['VariantsSynonymous'];
+	$constraintoutput['SynonymousObserved'] = $subsetvariantsandscores['VariantsSynonymous'];
 
 	//Find the percentage of the U score contributed by the given region
 	$constraintoutput['MissenseUScorePercent'] = ($subsetvariantsandscores['UScoreMissense']/$totalvariants['UScoreMissense'])*100;
