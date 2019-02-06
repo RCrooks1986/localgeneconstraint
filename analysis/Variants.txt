@@ -1,0 +1,1 @@
+Variant	Gene	Position	Type	Size	Region_Observed	Region_Expected
