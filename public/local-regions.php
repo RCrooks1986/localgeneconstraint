@@ -1,4 +1,5 @@
 <?php
+$t1 = microtime(true);
 //Calculate the local constraint for all the ranges specified in the checkranges array and populate the results array
 foreach ($localconstraintresults as $localconstraintresultskey=>$constraintoutput)
 	{
@@ -23,4 +24,10 @@ foreach ($localconstraintresults as $localconstraintresultskey=>$constraintoutpu
 
 	$localconstraintresults[$localconstraintresultskey] = $constraintoutput;
 	}
+$t2 = microtime(true);
+$time = $t2-$t1;
+
+//Record time taken for perfomance analytics
+$time = "\n" . $time;
+file_put_contents("../analysis/RegionTimes.txt",$time,FILE_APPEND);
 ?>

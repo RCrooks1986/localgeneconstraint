@@ -1,4 +1,5 @@
 <?php
+$t1 = microtime(true);
 include_once 'required-files.php';
 
 //Define gene symbol if it is not already defined
@@ -190,6 +191,13 @@ $maxmis = $globalresults['ExpectedMissense']*$topdeviation;
 //Run brute force algorithm to recalculate expected scores
 $globalresults['AdjustedExpectedMissense'] = brutecalculatee($globalresults['ZMissense'],$totalvariants['VariantsMissense'],$minmis,$maxmis);
 $globalresults['AdjustedExpectedSynonymous'] = brutecalculatee($globalresults['ZSynonymous'],$totalvariants['VariantsSynonymous'],$minsyn,$maxsyn);
+
+$t2 = microtime(true);
+$time = $t2-$t1;
+
+//Record time taken for perfomance analytics
+$time = "\n" . $time;
+file_put_contents("../analysis/GeneTimes.txt",$time,FILE_APPEND);
 
 //Call $globalresults to retrieve genewide constraint metric data
 ?>
