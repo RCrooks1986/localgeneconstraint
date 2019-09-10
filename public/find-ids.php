@@ -3,10 +3,18 @@
 if (isset($genesymbol) == false)
   $genesymbol = "BRCA1";
 
+//Default user inputs
+if (isset($userensg) == false)
+  $userensg = '';
+if (isset($userenst) == false)
+  $userenst = '';
+if (isset($useruniprot) == false)
+  $useruniprot = '';
+
 //Include API functions and the pre installed gene IDs
 include_once 'gene-ids.php';
 
-elseif (isset($genelist[$genesymbol]) == true)
+if (isset($genelist[$genesymbol]) == true)
   {
   $ids = $genelist[$genesymbol];
   }
@@ -46,10 +54,10 @@ else
   }
 
 //Get IDs from use input if available
-if ($userinput['ENST'] != '')
-  $ids['ENST'] = $userinput['ENST'];
-if ($userinput['ENSG'] != '')
-  $ids['ENSG'] = $userinput['ENSG'];
-if ($userinput['UniProt'] != '')
-  $ids['UniProt'] = $userinput['UniProt'];
+if ($userenst != '')
+  $ids['ENST'] = $userenst;
+if ($userensg != '')
+  $ids['ENSG'] = $userensg;
+if ($useruniprot != '')
+  $ids['UniProt'] = $useruniprot;
 ?>

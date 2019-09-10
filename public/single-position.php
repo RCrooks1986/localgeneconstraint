@@ -9,6 +9,12 @@ if ((isset($genesymbol) == false) OR ((isset($checknucleotide) == false)))
 else
 	$testingsingleposition = false;
 
+//Default start and end positions for search to 0
+if (isset($startrange) == false)
+	$startrange = 0;
+if (isset($endrange) == false)
+	$endrange = 0;
+
 //Include shared list of required files
 include_once 'required-files.php';
 
@@ -24,39 +30,46 @@ include 'protein-domains.php';
 
 //Define nucleotide ranges to check
 $localconstraintresults = array();
-$localconstraintresults[0] = array("Name"=>"+/-15","Start"=>$checknucleotide-15,"End"=>$checknucleotide+15);
-$localconstraintresults[1] = array("Name"=>"+/-30","Start"=>$checknucleotide-30,"End"=>$checknucleotide+30);
-$localconstraintresults[2] = array("Name"=>"+/-60","Start"=>$checknucleotide-60,"End"=>$checknucleotide+60);
-$localconstraintresults[3] = array("Name"=>"+/-90","Start"=>$checknucleotide-90,"End"=>$checknucleotide+90);
 
-//Identify the exon which a variant is contained in
-foreach ($exons as $exon)
+if (($startrange == 0) OR ($endrange == 0))
 	{
-	if (($exon['Start'] <= $checknucleotide) AND ($exon['End'] >= $checknucleotide))
+	$localconstraintresults[0] = array("Name"=>"+/-15","Start"=>$checknucleotide-15,"End"=>$checknucleotide+15);
+	$localconstraintresults[1] = array("Name"=>"+/-30","Start"=>$checknucleotide-30,"End"=>$checknucleotide+30);
+	$localconstraintresults[2] = array("Name"=>"+/-60","Start"=>$checknucleotide-60,"End"=>$checknucleotide+60);
+	$localconstraintresults[3] = array("Name"=>"+/-90","Start"=>$checknucleotide-90,"End"=>$checknucleotide+90);
+
+	//Identify the exon which a variant is contained in
+	foreach ($exons as $exon)
 		{
-		$exonstart = $exon['Start'];
-		$exonend = $exon['End'];
+		if (($exon['Start'] <= $checknucleotide) AND ($exon['End'] >= $checknucleotide))
+			{
+			$exonstart = $exon['Start'];
+			$exonend = $exon['End'];
+			}
+		}
+
+	$localconstraintresults[4] = array("Name"=>"Exon","Start"=>$exonstart,"End"=>$exonend);
+
+	//Also identify any domains in which the variant is in
+	foreach ($uniprotdomains as $domain)
+		{
+		if (($domain['StartDNA'] <= $checknucleotide) AND ($domain['EndDNA'] >= $checknucleotide))
+			{
+			//Format start, end and name of protein
+			$domainstart = $domain['StartDNA'];
+			$domainend = $domain['EndDNA'];
+			$domainname = "Domain: " . $domain['StartProtein'] . "-" . $domain['EndProtein'];
+
+			$domain = array("Name"=>$domainname,"Start"=>$domainstart,"End"=>$domainend);
+			array_push($localconstraintresults,$domain);
+			}
 		}
 	}
-
-$localconstraintresults[4] = array("Name"=>"Exon","Start"=>$exonstart,"End"=>$exonend);
-
-//Also identify any domains in which the variant is in
-foreach ($uniprotdomains as $domain)
+else
 	{
-	if (($domain['StartDNA'] <= $checknucleotide) AND ($domain['EndDNA'] >= $checknucleotide))
-		{
-		//Format start, end and name of protein
-		$domainstart = $domain['StartDNA'];
-		$domainend = $domain['EndDNA'];
-		$domainname = "Domain: " . $domain['StartProtein'] . "-" . $domain['EndProtein'];
-
-		$domain = array("Name"=>$domainname,"Start"=>$domainstart,"End"=>$domainend);
-		array_push($localconstraintresults,$domain);
-		}
+	$rangename = "Range: " . $startrange . "-" . $endrange;
+	$localconstraintresults[0] = array("Name"=>$rangename,"Start"=>$startrange,"End"=>$endrange);
 	}
-
-
 
 include 'local-regions.php';
 
