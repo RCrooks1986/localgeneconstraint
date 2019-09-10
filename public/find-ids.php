@@ -60,4 +60,14 @@ if ($userensg != '')
   $ids['ENSG'] = $userensg;
 if ($useruniprot != '')
   $ids['UniProt'] = $useruniprot;
+
+//Make sure there are some variables specified
+if (isset($ids['GeneSymbol']) == false)
+  $ids['GeneSymbol'] = '';
+if (isset($ids['ENST']) == false)
+  $ids['ENST'] = '';
+if (isset($ids['ENSG']) == false)
+  $ids['ENSG'] = '';
+if (isset($ids['UniProt']) == false)
+  $ids['UniProt'] = '';
 ?>
