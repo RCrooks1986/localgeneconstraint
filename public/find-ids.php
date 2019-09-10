@@ -4,10 +4,9 @@ if (isset($genesymbol) == false)
   $genesymbol = "BRCA1";
 
 //Include API functions and the pre installed gene IDs
-include_once '../functions/api-functions.php';
 include_once 'gene-ids.php';
 
-if (isset($genelist[$genesymbol]) == true)
+elseif (isset($genelist[$genesymbol]) == true)
   {
   $ids = $genelist[$genesymbol];
   }
@@ -45,4 +44,12 @@ else
   if (count($transcripts) == 1)
     $ids['ENST'] = $transcripts[0];
   }
+
+//Get IDs from use input if available
+if ($userinput['ENST'] != '')
+  $ids['ENST'] = $userinput['ENST'];
+if ($userinput['ENSG'] != '')
+  $ids['ENSG'] = $userinput['ENSG'];
+if ($userinput['UniProt'] != '')
+  $ids['UniProt'] = $userinput['UniProt'];
 ?>
