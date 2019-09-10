@@ -1,4 +1,8 @@
 <?php
+//Containers to store raw and normalised results in
+$rowlocal = array()
+$normalisedlocal = array()
+
 //Calculate the local constraint for all the ranges specified in the checkranges array and populate the results array
 foreach ($localconstraintresults as $localconstraintresultskey=>$constraintoutput)
 	{
