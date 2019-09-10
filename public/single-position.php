@@ -29,14 +29,14 @@ if (isset($checknucleotide) == false)
 include 'protein-domains.php';
 
 //Define nucleotide ranges to check
-$localconstraintresults = array();
+$localconstraintranges = array();
 
 if (($startrange == 0) OR ($endrange == 0))
 	{
-	$localconstraintresults[0] = array("Name"=>"+/-15","Start"=>$checknucleotide-15,"End"=>$checknucleotide+15);
-	$localconstraintresults[1] = array("Name"=>"+/-30","Start"=>$checknucleotide-30,"End"=>$checknucleotide+30);
-	$localconstraintresults[2] = array("Name"=>"+/-60","Start"=>$checknucleotide-60,"End"=>$checknucleotide+60);
-	$localconstraintresults[3] = array("Name"=>"+/-90","Start"=>$checknucleotide-90,"End"=>$checknucleotide+90);
+	$localconstraintranges[0] = array("Name"=>"+/-15","Start"=>$checknucleotide-15,"End"=>$checknucleotide+15);
+	$localconstraintranges[1] = array("Name"=>"+/-30","Start"=>$checknucleotide-30,"End"=>$checknucleotide+30);
+	$localconstraintranges[2] = array("Name"=>"+/-60","Start"=>$checknucleotide-60,"End"=>$checknucleotide+60);
+	$localconstraintranges[3] = array("Name"=>"+/-90","Start"=>$checknucleotide-90,"End"=>$checknucleotide+90);
 
 	//Identify the exon which a variant is contained in
 	foreach ($exons as $exon)
@@ -48,7 +48,7 @@ if (($startrange == 0) OR ($endrange == 0))
 			}
 		}
 
-	$localconstraintresults[4] = array("Name"=>"Exon","Start"=>$exonstart,"End"=>$exonend);
+	$localconstraintranges[4] = array("Name"=>"Exon","Start"=>$exonstart,"End"=>$exonend);
 
 	//Also identify any domains in which the variant is in
 	foreach ($uniprotdomains as $domain)
@@ -61,14 +61,14 @@ if (($startrange == 0) OR ($endrange == 0))
 			$domainname = "Domain: " . $domain['StartProtein'] . "-" . $domain['EndProtein'];
 
 			$domain = array("Name"=>$domainname,"Start"=>$domainstart,"End"=>$domainend);
-			array_push($localconstraintresults,$domain);
+			array_push($localconstraintranges,$domain);
 			}
 		}
 	}
 else
 	{
 	$rangename = "Range: " . $startrange . "-" . $endrange;
-	$localconstraintresults[0] = array("Name"=>$rangename,"Start"=>$startrange,"End"=>$endrange);
+	$localconstraintranges[0] = array("Name"=>$rangename,"Start"=>$startrange,"End"=>$endrange);
 	}
 
 include 'local-regions.php';
@@ -84,7 +84,9 @@ if ($testingsingleposition == true)
 	echo "Global Results:<br>";
 	print_r($globalresults);
 	echo "<br>";
-	echo "Local Results:<br>";
-	print_r($localconstraintresults);
+	echo "Local Results (Raw):<br>";
+	print_r($rawlocal);
+	echo "Local Results (Normalised):<br>";
+	print_r($normalisedlocal);
 	}
 ?>
