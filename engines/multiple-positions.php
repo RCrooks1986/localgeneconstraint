@@ -12,7 +12,7 @@ function variantsort($a,$b)
 //Input a 2 dimensional array containing ['GeneSymbol'] and ['Nucleotide'] elements in each element
 
 //Include shared list of required files
-include_once 'required-files.php';
+include_once 'localconstraint-required-files.php';
 
 //Default to an example list of variants
 if (isset($variants) == false)

@@ -1,5 +1,5 @@
 <?php
-include_once 'required-files.php';
+include_once 'localconstraint-required-files.php';
 
 //Define gene symbol if it is not already defined
 if (isset($genesymbol) == false)

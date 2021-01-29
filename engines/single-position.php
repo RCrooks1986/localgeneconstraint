@@ -16,7 +16,7 @@ if (isset($endrange) == false)
 	$endrange = 0;
 
 //Include shared list of required files
-include_once 'required-files.php';
+include_once 'localconstraint-required-files.php';
 
 //Retrieve gene wide constraint data, variant and uscore data
 include 'gene-wide.php';
