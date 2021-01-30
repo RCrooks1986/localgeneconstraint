@@ -5,8 +5,14 @@ $removedirs = array("/pages","/engines");
 $currentdirectory = str_replace($removedirs,"",$currentdirectory);
 $enginesdirectory = $currentdirectory . "/engines/";
 
+//The HTML form action address
+if ($currentdirectory == "/srv/http/development/public/GeneConstraint")
+	$formlink = "localconstraint.php";
+else
+	$formlink = "?page=LocalConstraint";
+
 //Get data from form
-if (1 == 1)
+if (isset($_POST['submit']) == true)
   {
   //$genesymbol = "COL1A1";
   //$checknucleotide = 1679;
@@ -105,15 +111,18 @@ if (1 == 1)
   }
 ?>
 <div class="item">
+<form action="<?php echo $formlink; ?>" method="post">
 <p class="blockheading">Variant Local Constraint</p>
 <p>Calculate local constraint scores of the region around a variant.</p>
-<p>Gene: <input type="text" name="GeneSymbol" size="5"> Position: <input type="text" name="GeneSymbol" size="3"></p>
+<p>Gene: <input type="text" name="GeneSymbol" size="5"></p>
+<p><input type="radio" name="Type" value="position" checked> Position: <input type="text" name="Postion" size="3"> or <input type="radio" name="Type" value="Range"> Range: <input type="text" name="Start" size="3"> - <input type="text" name="End" size="3"></p>
 <p>You do not need to provide an exact nucleotide change, only the position</p>
 <p>Optional:</p>
 <p>ENST: <input type="text" size="10" name="ENST"></p>
 <p>ENSG: <input type="text" size="10" name="ENSG"></p>
 <p>UniProt: <input type="text" size="5" name="UniProt"></p>
 <p>The script has defaults of these stored or looks them up if they are not specified.</p>
+</form>
 </div>
 
 <div class="item">
