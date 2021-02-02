@@ -122,6 +122,7 @@ if (isset($_POST['submit']) == true)
 <p>ENSG: <input type="text" size="10" name="ENSG"></p>
 <p>UniProt: <input type="text" size="5" name="UniProt"></p>
 <p>The script has defaults of these stored or looks them up if they are not specified.</p>
+<p><input type="submit" name="submit" value="Go"> <input type="reset" name="reset" value="Reset"></p>
 </form>
 </div>
 
