@@ -17,10 +17,32 @@ if (isset($_POST['submit']) == true)
   //$genesymbol = "COL1A1";
   //$checknucleotide = 1679;
 
-  $genesymbol = "PAX6";
-  $checknucleotide = 0;
-  $startrange = (273*3)-2;
-  $endrange = 422*3;
+
+
+	//Get user inputs
+	$genesymbol = $_POST['GeneSymbol'];
+	$inputtype = $_POST['Type'];
+	if ($inputtype == "Position")
+		{
+		$checknucleotide = $_POST['Position'];
+	  $startrange = 0;
+	  $endrange = 0;
+		}
+  elseif ($inputtype == "Range")
+		{
+		$checknucleotide = 0;
+		$startrange = $_POST['Start'];
+		$endrange = $_POST['End'];
+		}
+
+	$userenst = $_POST['ENST'];
+	$userensg = $_POST['ENSG'];
+	$useruniprot = $_POST['UniProt'];
+
+	//$genesymbol = "PAX6";
+  //$checknucleotide = 0;
+  //$startrange = (273*3)-2;
+  //$endrange = 422*3;
 
   include $enginesdirectory . 'single-position.php';
 
@@ -34,9 +56,10 @@ if (isset($_POST['submit']) == true)
 
     echo '<p>Gene Identifiers:<br>';
     echo 'Gene Symbol: ' . $genesymbol . '<br>';
-    echo 'ENST: ' . $checknucleotide . '<br>';
-    echo 'ENSG: ' . $startrange . '<br>';
-    echo 'UniProt: ' . $endrange . '<br>';
+		
+    echo 'ENST: ' . $ids['ENST'] . '<br>';
+    echo 'ENSG: ' . $ids['ENSG'] . '<br>';
+    echo 'UniProt: ' . $ids['UniProt'] . '<br>';
 
     echo '<p>Table 1: Details about the gene and its constraint parameters. These are used to calculate the local constraint.<br>';
     echo '<table class="scientific">';
@@ -115,7 +138,7 @@ if (isset($_POST['submit']) == true)
 <p class="blockheading">Variant Local Constraint</p>
 <p>Calculate local constraint scores of the region around a variant.</p>
 <p>Gene: <input type="text" name="GeneSymbol" size="5"></p>
-<p><input type="radio" name="Type" value="position" checked> Position: <input type="text" name="Postion" size="3"> or <input type="radio" name="Type" value="Range"> Range: <input type="text" name="Start" size="3"> - <input type="text" name="End" size="3"></p>
+<p><input type="radio" name="Type" value="Position" checked> Position: <input type="text" name="Position" size="3"> or <input type="radio" name="Type" value="Range"> Range: <input type="text" name="Start" size="3"> - <input type="text" name="End" size="3"></p>
 <p>You do not need to provide an exact nucleotide change, only the position</p>
 <p>Optional:</p>
 <p>ENST: <input type="text" size="10" name="ENST"></p>
