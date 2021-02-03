@@ -14,11 +14,6 @@ else
 //Get data from form
 if (isset($_POST['submit']) == true)
   {
-  //$genesymbol = "COL1A1";
-  //$checknucleotide = 1679;
-
-
-
 	//Get user inputs
 	$genesymbol = $_POST['GeneSymbol'];
 	$inputtype = $_POST['Type'];
@@ -46,6 +41,21 @@ if (isset($_POST['submit']) == true)
 
   include $enginesdirectory . 'single-position.php';
 
+	if ($ids['ENSG'] == '')
+		$displayensg = "Not Found";
+	else
+		$displayensg = $ids['ENSG'];
+
+	if ($ids['ENST'] == '')
+		$displayenst = "Not Found";
+	else
+		$displayenst = $ids['ENST'];
+
+	if ($ids['UniProt'] == '')
+		$displayuniprot = "Not Found";
+	else
+		$displayuniprot = $ids['UniProt'];
+
   echo '<div class="item">';
   if ((isset($globalresults) == true) AND (isset($rawlocal) == true))
     {
@@ -56,10 +66,9 @@ if (isset($_POST['submit']) == true)
 
     echo '<p>Gene Identifiers:<br>';
     echo 'Gene Symbol: ' . $genesymbol . '<br>';
-		
-    echo 'ENST: ' . $ids['ENST'] . '<br>';
-    echo 'ENSG: ' . $ids['ENSG'] . '<br>';
-    echo 'UniProt: ' . $ids['UniProt'] . '<br>';
+    echo 'ENSG: ' . $displayensg . '<br>';
+    echo 'ENST: ' . $displayenst . '<br>';
+    echo 'UniProt: ' . $displayuniprot . '<br>';
 
     echo '<p>Table 1: Details about the gene and its constraint parameters. These are used to calculate the local constraint.<br>';
     echo '<table class="scientific">';
@@ -128,7 +137,7 @@ if (isset($_POST['submit']) == true)
     }
   else
     {
-    echo "<p>D'oh! Something appears to have gone wrong!</p>";
+    echo "<div class="item"><p>D'oh! Something appears to have gone wrong!</p></div>";
     }
   echo '</div>';
   }
