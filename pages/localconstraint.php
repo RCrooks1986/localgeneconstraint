@@ -56,91 +56,10 @@ if (isset($_POST['submit']) == true)
 	else
 		$displayuniprot = $ids['UniProt'];
 
-  echo '<div class="item">';
-  if ((isset($globalresults) == true) AND (isset($rawlocal) == true))
-    {
-    if ($checknucleotide == 0)
-      echo "<p>The region of " . $genesymbol . " " . $startrange . "-" . $endrange . " has been analysed!</p>";
-    else
-      echo "<p>The variant at position " . $genesymbol . ": c." . $checknucleotide . " has been analysed!</p>";
-
-    echo '<p>Gene Identifiers:<br>';
-    echo 'Gene Symbol: ' . $genesymbol . '<br>';
-    echo 'ENSG: ' . $displayensg . '<br>';
-    echo 'ENST: ' . $displayenst . '<br>';
-    echo 'UniProt: ' . $displayuniprot . '<br>';
-
-    echo '<p>Table 1: Details about the gene and its constraint parameters. These are used to calculate the local constraint.<br>';
-    echo '<table class="scientific">';
-    echo '<tr>';
-    echo '<th>Parameter</th>';
-    echo '<th>Gene Wide Score</th>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td>Expected Missense</td>';
-    echo '<td>' . round($globalresults['ExpectedMissense'],2) . '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td>Adjusted Expected Missense</td>';
-    echo '<td>' . round($globalresults['AdjustedExpectedMissense'],2) . '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td>Observed Missense</td>';
-    echo '<td>' . round($globalresults['ObservedMissense'],2) . '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td>Z-Score Missense</td>';
-    echo '<td>' . round($globalresults['ZMissense'],2) . '</td>';
-    echo '</tr>';
-    echo '</table></p>';
-
-    if ($globalresults['ZMissense'] >= 3.09)
-      echo "<p>This gene is subject to constrained selection. The Missense Z-Score is " . round($globalresults['ZMissense'],2) . "</p>";
-
-    echo '<p>Table 2: Details about the gene region and its constraint, raw details.<br>';
-    echo '<table class="scientific">';
-    echo '<tr>';
-    echo '<th>Search Window</th>';
-    echo '<th>Expected</th>';
-    echo '<th>Observed</th>';
-    echo '<th>Z-Score</th>';
-    echo '</tr>';
-    foreach($rawlocal as $localresult)
-      {
-      echo '<tr>';
-      echo '<td>' . $localresult['Name'] . '</td>';
-      echo '<td>' . round($localresult['MissenseExpected'],2) . '</td>';
-      echo '<td>' . $localresult['VariantsMissense'] . '</td>';
-      echo '<td>' . round($localresult['ConstraintMissense'],2) . '</td>';
-      echo '</tr>';
-      }
-    echo '</table>';
-
-    echo '<p>Table 3: Details about the gene region and its constraint, with data normalised.<br>';
-    echo '<table class="scientific">';
-    echo '<tr>';
-    echo '<th>Search Window</th>';
-    echo '<th>Expected</th>';
-    echo '<th>Observed</th>';
-    echo '<th>Z-Score</th>';
-    echo '</tr>';
-    foreach($normalisedlocal as $localresult)
-      {
-      echo '<tr>';
-      echo '<td>' . $localresult['Name'] . '</td>';
-      echo '<td>' . round($localresult['MissenseExpected'],2) . '</td>';
-      echo '<td>' . round($localresult['VariantsMissense'],2) . '</td>';
-      echo '<td>' . round($localresult['ConstraintMissense'],2) . '</td>';
-      echo '</tr>';
-      }
-    echo '</table>';
-    }
-  else
-    {
-    echo "<div class="item"><p>D'oh! Something appears to have gone wrong!</p></div>";
-    }
-  echo '</div>';
-  }
+	//Display results
+	include $enginesdirectory . 'localconstraint-make-results.php';
+	echo $resultshtml;
+	}
 ?>
 <div class="item">
 <form action="<?php echo $formlink; ?>" method="post">
