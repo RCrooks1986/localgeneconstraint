@@ -34,11 +34,6 @@ if (isset($_POST['submit']) == true)
 	$userensg = $_POST['ENSG'];
 	$useruniprot = $_POST['UniProt'];
 
-	//$genesymbol = "PAX6";
-  //$checknucleotide = 0;
-  //$startrange = (273*3)-2;
-  //$endrange = 422*3;
-
   include $enginesdirectory . 'single-position.php';
 
 	if ($ids['ENSG'] == '')

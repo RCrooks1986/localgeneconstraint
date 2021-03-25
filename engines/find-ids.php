@@ -1,8 +1,4 @@
 <?php
-//Default to BRCA1
-if (isset($genesymbol) == false)
-  $genesymbol = "BRCA1";
-
 //Default user inputs
 if (isset($userensg) == false)
   $userensg = '';

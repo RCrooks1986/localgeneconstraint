@@ -1,14 +1,4 @@
 <?php
-//Input $genesymbol and $checknucleotide to define the gene and which nucleotide is being checked for local constraint
-if ((isset($genesymbol) == false) OR ((isset($checknucleotide) == false)))
-	{
-	$genesymbol = "COL1A1";
-	$checknucleotide = 1679;
-	$testingsingleposition = true;
-	}
-else
-	$testingsingleposition = false;
-
 //Default start and end positions for search to 0
 if (isset($startrange) == false)
 	$startrange = 0;
@@ -72,21 +62,4 @@ else
 	}
 
 include 'local-regions.php';
-
-/*
-Global (gene wide) result can be retrieved by calling $globalresults
-Local (by range specified) results can be retrieved by calling $localconstraintresults
-*/
-
-//For troubleshooting for downsteam processing print these to check output
-if ($testingsingleposition == true)
-	{
-	echo "Global Results:<br>";
-	print_r($globalresults);
-	echo "<br>";
-	echo "Local Results (Raw):<br>";
-	print_r($rawlocal);
-	echo "Local Results (Normalised):<br>";
-	print_r($normalisedlocal);
-	}
 ?>

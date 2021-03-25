@@ -1,10 +1,6 @@
 <?php
 include_once 'localconstraint-required-files.php';
 
-//Define gene symbol if it is not already defined
-if (isset($genesymbol) == false)
-	$genesymbol = "BRCA1";
-
 //Get gene and transcript identifiers from database or API
 include 'find-ids.php';
 
