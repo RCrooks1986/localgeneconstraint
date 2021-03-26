@@ -13,7 +13,9 @@ if ((isset($globalresults) == true) AND (isset($rawlocal) == true))
   $resultshtml = $resultshtml . 'Gene Symbol: ' . $genesymbol . '<br>';
   $resultshtml = $resultshtml . 'ENSG: ' . $displayensg . '<br>';
   $resultshtml = $resultshtml . 'ENST: ' . $displayenst . '<br>';
-  $resultshtml = $resultshtml . 'UniProt: ' . $displayuniprot . '<br>';
+  $resultshtml = $resultshtml . 'UniProt: ' . $displayuniprot . '</p>';
+
+  $resultshtml = $resultshtml . '<p>These are the sequence IDs used to look up the gene sequence, its exons, and translated protein domains.</p>';
 
   $resultshtml = $resultshtml . '<p>Table 1: Details about the gene and its constraint parameters. These are used to calculate the local constraint.<br>';
   $resultshtml = $resultshtml . '<table class="scientific">';
@@ -38,6 +40,11 @@ if ((isset($globalresults) == true) AND (isset($rawlocal) == true))
   $resultshtml = $resultshtml . '<td>' . round($globalresults['ZMissense'],2) . '</td>';
   $resultshtml = $resultshtml . '</tr>';
   $resultshtml = $resultshtml . '</table></p>';
+
+  $resultshtml = $resultshtml . '<p>These results are for gene wide scores, but
+  are used to calculate local results. A result that a gene is subject to constrained
+  selection (Z-Score greater than 3.09) means the PP2 ACMG criteria can be applied.
+  Note for diagnostic purposes you should use the <a href="https://gnomad.broadinstitute.org/" target="new">gnomAD</a> database.</p>';
 
   if ($globalresults['ZMissense'] >= 3.09)
     $resultshtml = $resultshtml . "<p>This gene is subject to constrained selection. The Missense Z-Score is " . round($globalresults['ZMissense'],2) . "</p>";
@@ -79,6 +86,12 @@ if ((isset($globalresults) == true) AND (isset($rawlocal) == true))
     $resultshtml = $resultshtml . '</tr>';
     }
   $resultshtml = $resultshtml . '</table>';
+
+  $resultshtml = $resultshtml . '<p>A region subject to constrained selection
+  (Z-score greater than 3.09) may indicate a region less tolerant to benign
+  variation. Results are given using raw data straight from the database and
+  normalized to simulate a region that is the size of the entire gene. Use
+  this at your discretion and note it has <b>not been clinically validated.</b></p>';
   }
 else
   {

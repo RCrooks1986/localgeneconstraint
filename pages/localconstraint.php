@@ -59,7 +59,12 @@ if (isset($_POST['submit']) == true)
 <div class="item">
 <form action="<?php echo $formlink; ?>" method="post">
 <p class="blockheading">Variant Local Constraint</p>
-<p>Calculate local constraint scores of the region around a variant.</p>
+<p>Calculate local constraint scores of the region around a variant. This can be
+	 used to test if a variant is at a position in a region of a gene that is subject
+	 to constrained selection, even if the entire gene is not constrained.</p>
+<p><b>NOTE: This tool has not been validated for clinical use. Use only for
+	research use, or in consultation with a clinical bioinformatician or clinical
+	geneticist in the context of other clinical evidence.</b></p>
 <p>Gene: <input type="text" name="GeneSymbol" size="5"></p>
 <p><input type="radio" name="Type" value="Position" checked> Position: <input type="text" name="Position" size="3"> or <input type="radio" name="Type" value="Range"> Range: <input type="text" name="Start" size="3"> - <input type="text" name="End" size="3"></p>
 <p>You do not need to provide an exact nucleotide change, only the position</p>
@@ -67,12 +72,35 @@ if (isset($_POST['submit']) == true)
 <p>ENST: <input type="text" size="10" name="ENST"></p>
 <p>ENSG: <input type="text" size="10" name="ENSG"></p>
 <p>UniProt: <input type="text" size="5" name="UniProt"></p>
-<p>The script has defaults of these stored or looks them up if they are not specified.</p>
+<p>The script has defaults (below) of these stored or attempts to look them up if they are not specified.</p>
 <p><input type="submit" name="submit" value="Go"> <input type="reset" name="reset" value="Reset"></p>
 </form>
 </div>
 
-<div class="item">
-<p class="blockheading">Region Local Constraint</p>
-<p>Calculate the local constraint score for a specified region of a gene.</p>
+<div>
+<p class="blockheading">Default Gene IDs</p>
+
+<p>Default gene IDs used in the local constraint tool</p>
+<table class="scientific">
+<tr>
+  <th>Gene Symbol</th>
+  <th>ENST</th>
+  <th>ENSG</th>
+  <th>UniProt</th>
+</tr>
+<?php
+include '../engines/gene-ids.php';
+
+foreach ($genelist as $gene)
+  {
+  echo '<tr>';
+  echo '<td>' . $gene['GeneSymbol'] . '</td>';
+  echo '<td>' . $gene['ENST'] . '</td>';
+  echo '<td>' . $gene['ENSG'] . '</td>';
+  echo '<td>' . $gene['UniProt'] . '</td>';
+  echo '</tr>';
+  }
+?>
+</title>
+
 </div>
