@@ -1,12 +1,4 @@
 <?php
-if (isset($ids['UniProt']) == false)
-  {
-  $ids['UniProt'] = "P10275";
-  $testing = true;
-  }
-else
-  $testing = false;
-
 if ($ids['UniProt'] != '')
   {
   //Get the length of the ID, which is important for reading the GFF file
@@ -47,7 +39,4 @@ if ($ids['UniProt'] != '')
   }
 else
   $uniprotdomains = array();
-
-if ($testing == true)
-  print_r($uniprotdomains);
 ?>
